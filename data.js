@@ -1,7 +1,7 @@
 // built in base
 facilities = {
     laboratory: {
-        requires: null,
+        requires: 'mission_gatecrasher',
         supplies: 125,
         upkeep: 35,
         power: -3,
@@ -13,7 +13,7 @@ facilities = {
         power: -3,
     },
     workshop: {
-        requires: null,
+        requires: 'mission_gatecrasher',
         supplies: 125,
         upkeep: 35,
         power: -1,
@@ -25,7 +25,7 @@ facilities = {
         power: -2,
     },
     power_relay: {
-        requires: null,
+        requires: 'mission_gatecrasher',
         supplies: 80,
         upkeep: 10,
         power: +3,
@@ -37,13 +37,13 @@ facilities = {
         power: +2,
     },
     guerilla_tactics_school: {
-        requires: null,
+        requires: 'mission_gatecrasher',
         supplies: 85,
         upkeep: 25,
         power: -3,
     },
     resistance_comms: {
-        requires: null,
+        requires: 'resistance_communications',
         supplies: 110,
         upkeep: 25,
         power: -3,
@@ -60,7 +60,7 @@ facilities = {
         upkeep: 35,
         power: -3,
     },
-    proving_grounds: {
+    proving_ground: {
         requires: ['advent_officer_autopsy'],
         supplies: 100,
         upkeep: 25,
@@ -101,15 +101,15 @@ facilities = {
     },
     shadow_chamber: {
         requires: ['alien_encryption'],
-        supplies: 125,
+        cost_item: ['supplies', 'power'],
+        cost_value: [125, 5],
         upkeep: 30,
-        power: -5,
     },
     psionic_gate: {
         requires: ['shadow_chamber', 'psionic_gate_item'],
-        supplies: 200,
+        cost_item: ['supplies', 'power'],
+        cost_value: [200, 4],
         upkeep: 50,
-        power: -4,
     },
 }
 
@@ -117,7 +117,7 @@ facilities = {
 research = {
     faceless_autopsy: {
         requires: ['faceless_corpse'],
-        instant, 3
+        instant: 3
     },
     chryssalid_autopsy: {
         requires: ['chryssalid_corpse'],
@@ -148,45 +148,68 @@ research = {
         instant: 4
     },
     alien_biotech: {
-        requires: null,
+        requires: ['mission_gatecrasher']
     },
     modular_weapons: {
-        requires: null,
+        requires: ['mission_gatecrasher']
     },
     hybrid_materials: {
-        requires: null,
+        requires: ['mission_gatecrasher']
     },
+    resistance_communications: {
+        requires: ['mission_guerrilla_ops']
+    }
 }
 
 // stuff used in combat
 items = {
     flashbang_grenade: {
-        requires: null,
+        requires: ['build_flashbang_grenade'],
     },
     medkit: {
-        requires: null,
+        requires: ['build_medkit'],
     },
     smoke_grenade: {
-        requires: null,
+        requires: ['build_smoke_grenade'],
+    },
+    skulljack: {
+        requires: ['project_skulljack'],
     },
     smoke_bomb: {
-        requires: ['smoke_grenade', 'advanced_explosives'],
+        requires: ['project_advanced_explosives'],
     },
     nano_medkit: {
-        requires: ['medkit', 'battlefield_medicine'],
+        requires: ['project_battlefield_medicine'],
     },
     mimic_beacon: {
-        requires: ['faceless_autopsy'],
+        requires: ['build_mimic_beacon'],
     },
     hellweave: {
-        requires: ['chryssalid_autopsy'],
+        requires: ['build_hellweave'],
     },
 }
 
-// Proving ground
-proving_ground = {
+// includes proving ground projects and build items
+engineering_project = {
+    build_flashbang_grenade: {
+        requires: ['mission_gatecrasher'],
+        cost_item: ['supplies'],
+        cost_value: [35]
+    },
+    build_medkit: {
+        requires: ['mission_gatecrasher'],
+        cost_item: ['supplies'],
+        cost_value: [35]
+    },
+    build_smoke_grenade: {
+        requires: ['mission_gatecrasher'],
+        cost_item: ['supplies'],
+        cost_value: [50]
+    },
     battlefield_medicine: {
         requires: ['viper_autopsy'],
+        cost_item: ['supplies', 'elerium_core', 'viper_corpse'],
+        cost_value: [50, 1, 2]
     },
 }
 
