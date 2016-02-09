@@ -117,39 +117,44 @@ facilities = {
 research = {
     faceless_autopsy: {
         requires: ['faceless_corpse'],
+        instant, 3
     },
     chryssalid_autopsy: {
-
+        requires: ['chryssalid_corpse'],
+        instant: 15
     },
     viper_autopsy: {
-
+        requires: ['viper_corpse', 'scientist'],
+        instant: 5
     },
     sectoid_autopsy: {
-
+        requires: ['sectoid_corpse'],
+        instant: 6
     },
     berserker_autopsy: {
-
+        requires: ['berserker_corpse'],
+        instant: 5
     },
     archon_autopsy: {
-
+        requires: ['archon_corpse'],
+        instant: 3
     },
     gatekeeper_autopsy: {
-
+        requires: ['gatekeeper_corpse'],
+        instant: 3
     },
     andromedon_autopsy: {
-
-    },
-    battlefield_medicine: {
-        requires: ['viper_autopsy'],
+        requires: ['andromedon_corpse'],
+        instant: 4
     },
     alien_biotech: {
-
+        requires: null,
     },
     modular_weapons: {
-
+        requires: null,
     },
     hybrid_materials: {
-
+        requires: null,
     },
 }
 
@@ -175,6 +180,13 @@ items = {
     },
     hellweave: {
         requires: ['chryssalid_autopsy'],
+    },
+}
+
+// Proving ground
+proving_ground = {
+    battlefield_medicine: {
+        requires: ['viper_autopsy'],
     },
 }
 
