@@ -153,7 +153,7 @@ facilities = {
 // science and engineering researches
 research = {
     advent_officer_autopsy: {
-        requires: ['advent_officer_corpse'],
+        requires: ['advent_officer_corpse', 'mission_gatecrasher'],
         cost: {
             advent_officer_corpse: 1
         },
@@ -295,7 +295,7 @@ research = {
         },
     },
     psionics: {
-        requires: ['sectoid_autopsy']
+        requires: ['sectoid_autopsy'],
         cost: {
             elerium: 5
         }
@@ -324,7 +324,7 @@ research = {
         },
     },
     elerium_research: {
-        requires: ['gauss_weapons', 'plated_armor']
+        requires: ['gauss_weapons', 'plated_armor'],
         cost: {
             elerium: 20
         },
@@ -442,5 +442,10 @@ drops = {
 
 // stuff that needs to happen
 events = {
+    mission_gatecrasher: {
 
+    },
+    mission_guerrilla_ops: {
+
+    },
 }
