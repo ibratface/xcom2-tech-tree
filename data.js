@@ -152,8 +152,11 @@ facilities = {
 
 // science and engineering researches
 research = {
+    alien_biotech: {
+        requires: ['mission_gatecrasher'],
+    },
     advent_officer_autopsy: {
-        requires: ['advent_officer_corpse', 'mission_gatecrasher'],
+        requires: ['alien_biotech'],
         cost: {
             advent_officer_corpse: 1
         },
@@ -212,9 +215,8 @@ research = {
             sectopod_corpse: 3
         },
     },
-
     faceless_autopsy: {
-        requires: ['faceless_corpse'],
+        requires: ['alien_biotech'],
         cost: {
             faceless_corpse: 1
         },
@@ -223,7 +225,7 @@ research = {
         },
     },
     chryssalid_autopsy: {
-        requires: ['chryssalid_corpse'],
+        requires: ['alien_biotech'],
         cost: {
             chryssalid_corpse: 1
         },
@@ -232,7 +234,7 @@ research = {
         },
     },
     viper_autopsy: {
-        requires: ['viper_corpse'],
+        requires: ['alien_biotech'],
         cost: {
             viper_corpse: 1
         },
@@ -241,7 +243,7 @@ research = {
         },
     },
     sectoid_autopsy: {
-        requires: ['sectoid_corpse'],
+        requires: ['alien_biotech'],
         cost: {
             sectoid_corpse: 1
         },
@@ -250,7 +252,7 @@ research = {
         },
     },
     muton_autopsy: {
-        requires: ['muton_corpse'],
+        requires: ['alien_biotech'],
         cost: {
             muton_corpse: 1
         },
@@ -259,7 +261,7 @@ research = {
         },
     },
     berserker_autopsy: {
-        requires: ['berserker_corpse'],
+        requires: ['alien_biotech'],
         cost: {
             berserker_corpse: 1
         },
@@ -268,7 +270,7 @@ research = {
         },
     },
     archon_autopsy: {
-        requires: ['archon_corpse'],
+        requires: ['alien_biotech'],
         cost: {
             archon_corpse: 1
         },
@@ -277,7 +279,7 @@ research = {
         },
     },
     gatekeeper_autopsy: {
-        requires: ['gatekeeper_corpse'],
+        requires: ['alien_biotech'],
         cost: {
             gatekeeper_corpse: 1
         },
@@ -286,7 +288,7 @@ research = {
         },
     },
     andromedon_autopsy: {
-        requires: ['andromedon_corpse'],
+        requires: ['alien_biotech'],
         cost: {
             andromedon_corpse: 1
         },

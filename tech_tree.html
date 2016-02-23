@@ -1,6 +1,11 @@
 <html>
 
 <head>
+    <style>
+        #chart_div {
+            margin: 50;
+        }
+    </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript" src="data.js"></script>
@@ -10,15 +15,61 @@
         });
         google.charts.setOnLoadCallback(drawChart);
 
+        function toMilliseconds(days) {
+            return days * 24 * 60 * 60 * 1000;
+        }
 
-        function toMilliseconds(minutes) {
-            return minutes * 60 * 1000;
+        function initData(objs, type) {
+            for (var key in objs) {
+                objs[key].type = type;
+                objs[key].start = null;
+                objs[key].end = null;
+                objs[key].duration = toMilliseconds(2);
+            }
+        }
+
+        function fillData(data, objs) {
+            var reqstr = null;
+            for (var key in objs) {
+                var reqs = objs[key].requires;
+                if (Array.isArray(reqs)) {
+                    reqstr = '';
+                    for (var i in reqs) {
+                        if (objs[reqs[i]]) {
+                            reqstr += reqs[i] += ',';
+                        }
+                    }
+                } else {
+                    reqstr = reqs;
+                }
+                data.addRows([
+                    [key, key, objs[key].type, objs[key].start, objs[key].end, objs[key].duration, 0, reqstr]
+                ]);
+            }
         }
 
         function drawChart() {
+            // data prep
+            initData(events, 'Event');
+            initData(facilities, 'Facility');
+            initData(research, 'Research');
 
+            var all = {};
+            $.extend(all, events);
+            $.extend(all, research);
+            $.extend(all, facilities);
+            // $.extend(all, drops);
+
+            var defaultStartDate = new Date(0, 0, 1);
+
+            // hacks to get elerium_conduit to look right
+            all['mission_gatecrasher'].start = defaultStartDate;
+            all['mission_guerrilla_ops'].start = defaultStartDate;
+            all['shadow_chamber'].start = defaultStartDate;
+            all['elerium_conduit'].start = new Date(0, 0, 11);
+
+            // now for the chart stuff
             var otherData = new google.visualization.DataTable();
-
             otherData.addColumn('string', 'Task ID');
             otherData.addColumn('string', 'Task Name');
             otherData.addColumn('string', 'Resource');
@@ -27,43 +78,25 @@
             otherData.addColumn('number', 'Duration');
             otherData.addColumn('number', 'Percent Complete');
             otherData.addColumn('string', 'Dependencies');
-
-            // otherData.addRows([
-            //     ['toTrain', 'Walk to train stop', 'walk', null, null, toMilliseconds(5), 100, null],
-            //     ['music', 'Listen to music', 'music', null, null, toMilliseconds(70), 100, null],
-            //     ['wait', 'Wait for train', 'wait', null, null, toMilliseconds(10), 100, 'toTrain'],
-            //     ['train', 'Train ride', 'train', null, null, toMilliseconds(45), 75, 'wait'],
-            //     ['toWork', 'Walk to work', 'walk', null, null, toMilliseconds(10), 0, 'train'],
-            //     ['work', 'Sit down at desk', null, null, null, toMilliseconds(2), 0, 'toWork'],
-            //
-            // ]);
-
-            var all = {};
-            $.extend(all, events);
-            $.extend(all, research);
-            $.extend(all, facilities);
-            $.extend(all, drops);
-
-            for (var key in all) {
-                reqs = '';
-                if (Array.isArray(all[key].requires))
-                    for (var i in all[key].requires) {
-                        if (all[all[key].requires[i]]) {
-                            reqs += all[key].requires[i] += ',';
-                        }
-                    }
-                else {
-                    reqs = all[key].requires;
-                }
-                otherData.addRows([
-                    [key, key, 'days', null, null, toMilliseconds(5), 50, reqs]
-                ]);
-            }
+            fillData(otherData, all);
 
             var options = {
-                height: 12030,
+                height: 3000,
                 gantt: {
-                    defaultStartDateMillis: new Date(2015, 3, 28)
+                    defaultStartDateMillis: defaultStartDate,
+                    labelStyle: {
+                        fontName: 'Roboto2',
+                        fontSize: 18,
+                        color: '#757575'
+                    },
+                    criticalPathEnabled: false,
+                    barHeight: 36,
+                    arrow: {
+                        angle: 25,
+                        width: 5,
+                        color: 'gray',
+                        radius: 10,
+                    }
                 }
             };
 
