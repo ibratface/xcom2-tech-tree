@@ -65,7 +65,7 @@ facilities = {
         }
     },
     additional_comm_station: {
-        requires: ['resistance_comms'],
+        requires: ['resistance_comms', 'resistance_radio'],
         cost: {
             supplies: 125,
             upkeep: 35,
@@ -369,6 +369,9 @@ research = {
     resistance_communications: {
         requires: ['mission_guerrilla_ops']
     },
+    resistance_radio: {
+        requires: ['resistance_communications']
+    }
     battlefield_medicine: {
         requires: ['viper_autopsy'],
         cost: {
@@ -382,60 +385,124 @@ research = {
 // stuff used in combat
 items = {
     flashbang_grenade: {
-        requires: ['build_flashbang_grenade'],
+        requires: ['build_flashbang_grenade']
     },
     medkit: {
-        requires: ['build_medkit'],
+        requires: ['build_medkit']
     },
     smoke_grenade: {
-        requires: ['build_smoke_grenade'],
+        requires: ['build_smoke_grenade']
     },
     skulljack: {
-        requires: ['build_skulljack'],
+        requires: ['build_skulljack']
     },
     smoke_bomb: {
-        requires: ['build_smoke_bomb'],
+        requires: ['build_smoke_bomb']
     },
     nano_medkit: {
-        requires: ['build_nano_medkit'],
+        requires: ['build_nano_medkit']
     },
     mimic_beacon: {
-        requires: ['build_mimic_beacon'],
+        requires: ['build_mimic_beacon']
     },
     hellweave: {
-        requires: ['build_hellweave'],
+        requires: ['build_hellweave']
     },
+    incendiary_grenade: {
+        requires: ['experimental_grenade']
+    },
+    incendiary_bomb: {
+        requires: ['advanced_explosives', 'incendiary_grenade']
+    },
+    acid_grenade: {
+        requires: ['experimental_grenade']
+    },
+    acid_bomb: {
+        requires: ['advanced_explosives', 'acid_grenade']
+    },
+    gas_grenade: {
+        requires: ['experimental_grenade']
+    },
+    gas_bomb: {
+        requires: ['advanced_explosives', 'gas_grenade']
+    },
+    ap_rounds: {
+        requires: ['experimental_ammo']
+    },
+    tracer_rounds: {
+        requires: ['experimental_ammo']
+    },
+    dragon_rounds: {
+        requires: ['experimental_ammo']
+    },
+    talon_rounds: {
+        requires: ['experimental_ammo']
+    },
+    venom_rounds: {
+        requires: ['experimental_ammo']
+    }
+    proximity_mine: {
+        requires: ['build_proximity_mine']
+    }
 }
 
-// includes proving ground projects and build items
-project = {
+// engineering build items
+built_item = {
     build_flashbang_grenade: {
-        requires: ['mission_gatecrasher'],
+        requires: ['mission_gatecrasher']
         cost: {
-            supplies: 35,
-        },
+            supplies: 35
+        }
     },
     build_medkit: {
-        requires: ['mission_gatecrasher'],
+        requires: ['mission_gatecrasher']
         cost: {
-            supplies: 35,
-        },
+            supplies: 35
+        }
     },
     build_smoke_grenade: {
-        requires: ['mission_gatecrasher'],
+        requires: ['mission_gatecrasher']
         cost: {
-            supplies: 50,
-        },
+            supplies: 50
+        }
     },
     build_skulljack: {
-        requires: ['proving_grounds'],
+        requires: ['proving_grounds']
     },
     build_smoke_bomb: {
-        requires: ['advanced_explosives'],
+        requires: ['advanced_explosives']
     },
     build_nano_medkit: {
-        requires: ['battlefield_medicine'],
+        requires: ['battlefield_medicine']
     },
+    build_hellweave: {
+        requires: ['chryssalid_autopsy']
+    },
+    build_proximity_mine: {
+        requires: ['andromedon_autopsy']
+    },
+    build_mimic_beacon: {
+        requires: ['faceless_autopsy']
+    }
+}
+
+// proving ground projects
+project = {
+    project_experimental_grenade: {
+        requires: ['proving_grounds']
+    },
+    project_experimental_ammo: {
+        requires: ['proving_grounds']
+    },
+    project_plasma_grenade: {
+        requires: ['muton_autopsy', 'proving_grounds']
+    },
+    project_advanced_explosives: {
+        requires: ['project_plasma_grenade']
+    },
+    project_skullmining: {
+        requires: ['skulljack']
+    }
 }
 
 // item drops
@@ -458,6 +525,14 @@ drops = {
     },
     andromedon_corpse: {
     },
+    facility_lead: {
+    },
+    datapad: {
+    },
+    data_cache: {
+    },
+    codex_brain: {
+    }
 }
 
 // stuff that needs to happen
@@ -468,4 +543,16 @@ events = {
     mission_guerrilla_ops: {
 
     },
+    radio_relays: {
+        requires: ['resistance_radio']
+    },
+    blacksite_region: {
+        requires: ['resistance_communications']
+    },
+    mission_blacksite: {
+        requires: ['blacksite_region']
+    },
+    skulljack_officer: {
+        requires: ['skulljack']
+    }
 }
