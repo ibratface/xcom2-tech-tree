@@ -25,7 +25,7 @@ facilities = {
         }
     },
     additional_workbench: {
-        requires: 'workshop',
+        requires: ['workshop'],
         cost: {
             supplies: 100,
             upkeep: 40,
@@ -33,7 +33,7 @@ facilities = {
         }
     },
     power_relay: {
-        requires: 'mission_gatecrasher',
+        requires: ['mission_gatecrasher'],
         cost: {
             supplies: 80,
             upkeep: 10,
@@ -41,7 +41,7 @@ facilities = {
         }
     },
     power_conduit: {
-        requires: 'power_relay',
+        requires: ['power_relay'],
         cost: {
             supplies: 80,
             upkeep: 10,
@@ -49,7 +49,7 @@ facilities = {
         }
     },
     guerilla_tactics_school: {
-        requires: 'mission_gatecrasher',
+        requires: ['mission_gatecrasher'],
         cost: {
             supplies: 85,
             upkeep: 25,
@@ -57,7 +57,7 @@ facilities = {
         }
     },
     resistance_comms: {
-        requires: 'resistance_communications',
+        requires: ['resistance_communications'],
         cost: {
             supplies: 110,
             upkeep: 25,
@@ -124,7 +124,7 @@ facilities = {
         }
     },
     elerium_conduit: {
-        requires: ['power_relay', 'elerium_research'],
+        requires: ['elerium_research', 'power_relay'],
         cost: {
             supplies: 150,
             elerium: 20,
@@ -319,6 +319,7 @@ research = {
         },
     },
     plated_armor: {
+        requires: ['hybrid_materials'],
         cost: {
             alloy: 10
         },
@@ -437,7 +438,24 @@ project = {
 
 // item drops
 drops = {
-
+    faceless_corpse: {
+    },
+    chryssalid_corpse: {
+    },
+    viper_corpse: {
+    },
+    sectoid_corpse: {
+    },
+    muton_corpse: {
+    },
+    berserker_corpse: {
+    },
+    archon_corpse: {
+    },
+    gatekeeper_corpse: {
+    },
+    andromedon_corpse: {
+    },
 }
 
 // stuff that needs to happen
