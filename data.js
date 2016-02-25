@@ -1,7 +1,7 @@
 // built in base
 facilities = {
     laboratory: {
-        requires: 'mission_gatecrasher',
+        requires: ['mission_gatecrasher'],
         cost: {
             supplies: 125,
             upkeep: 35,
@@ -9,7 +9,7 @@ facilities = {
         }
     },
     additional_research_station: {
-        requires: 'laboratory',
+        requires: ['laboratory'],
         cost: {
             supplies: 125,
             upkeep: 40,
@@ -17,7 +17,7 @@ facilities = {
         }
     },
     workshop: {
-        requires: 'mission_gatecrasher',
+        requires: ['mission_gatecrasher'],
         cost: {
             supplies: 125,
             upkeep: 35,
@@ -371,7 +371,7 @@ research = {
     },
     resistance_radio: {
         requires: ['resistance_communications']
-    }
+    },
     battlefield_medicine: {
         requires: ['viper_autopsy'],
         cost: {
@@ -380,6 +380,9 @@ research = {
             viper_corpse: 2,
         },
     },
+    alien_encryption: {
+        requires: ['blacksite_vial'],
+    }
 }
 
 // stuff used in combat
@@ -440,67 +443,70 @@ items = {
     },
     venom_rounds: {
         requires: ['experimental_ammo']
-    }
+    },
     proximity_mine: {
         requires: ['build_proximity_mine']
+    },
+    skulljack: {
+        requires: ['proving_grounds'],
     }
 }
 
 // engineering build items
 built_item = {
     build_flashbang_grenade: {
-        requires: ['mission_gatecrasher']
+        requires: ['mission_gatecrasher'],
         cost: {
             supplies: 35
         }
     },
     build_medkit: {
-        requires: ['mission_gatecrasher']
+        requires: ['mission_gatecrasher'],
         cost: {
             supplies: 35
         }
     },
     build_smoke_grenade: {
-        requires: ['mission_gatecrasher']
+        requires: ['mission_gatecrasher'],
         cost: {
             supplies: 50
         }
     },
     build_skulljack: {
-        requires: ['proving_grounds']
+        requires: ['proving_grounds'],
     },
     build_smoke_bomb: {
-        requires: ['advanced_explosives']
+        requires: ['advanced_explosives'],
     },
     build_nano_medkit: {
-        requires: ['battlefield_medicine']
+        requires: ['battlefield_medicine'],
     },
     build_hellweave: {
-        requires: ['chryssalid_autopsy']
+        requires: ['chryssalid_autopsy'],
     },
     build_proximity_mine: {
-        requires: ['andromedon_autopsy']
+        requires: ['andromedon_autopsy'],
     },
     build_mimic_beacon: {
-        requires: ['faceless_autopsy']
+        requires: ['faceless_autopsy'],
     }
 }
 
 // proving ground projects
-project = {
-    project_experimental_grenade: {
+projects = {
+    experimental_grenade: {
         requires: ['proving_grounds']
     },
-    project_experimental_ammo: {
+    experimental_ammo: {
         requires: ['proving_grounds']
     },
-    project_plasma_grenade: {
+    plasma_grenade: {
         requires: ['muton_autopsy', 'proving_grounds']
     },
-    project_advanced_explosives: {
+    advanced_explosives: {
         requires: ['project_plasma_grenade']
     },
-    project_skullmining: {
+    skullmining: {
         requires: ['skulljack']
     }
 }
@@ -532,6 +538,9 @@ drops = {
     data_cache: {
     },
     codex_brain: {
+    },
+    blacksite_vial: {
+        requires: ['blacksite_region'],
     }
 }
 
@@ -541,7 +550,7 @@ events = {
 
     },
     mission_guerrilla_ops: {
-
+        requires: ['mission_gatecrasher'],
     },
     radio_relays: {
         requires: ['resistance_radio']

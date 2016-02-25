@@ -1,0 +1,157 @@
+<html>
+
+<head>
+    <style>
+        #chart_div {
+            margin: 50;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="data.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function()
+        {
+            drawChart();
+        });
+
+        function toMilliseconds(days)
+        {
+            return days * 24 * 60 * 60 * 1000;
+        }
+
+        function initCategory(data, type)
+        {
+            for (var key in data) {
+                data[key].name = key;
+                data[key].type = type;
+                if (!data[key].requires) data[key].requires = [];
+                data[key].children = [];
+                data[key].weight = 0;
+                data[key].row = 1;
+                data[key].depth = 0;
+            }
+        }
+
+        function arrangeNodes(data)
+        {
+            // create tree structure
+            for (var key in data)
+            {
+                for (var i=0; i<data[key].requires.length; i++)
+                {
+                    var parent = data[key].requires[i];
+                    if (data[parent])
+                    {
+                        data[parent].children.push(data[key]);
+                    }
+                }
+            }
+
+            var byWeight = function(l, r) { return l.weight - r.weight; };
+
+            var roots = [];
+            for (var key in data)
+            {
+                if (data[key].requires.length == 0)
+                {
+                    roots.push(data[key]);
+                }
+            }
+
+            // figure out the depth and weight of each node
+            var depth = 0;
+            var walk_depth_weight = function(node)
+            {
+                var weight = 1;
+                if (node.depth < depth)
+                {
+                    node.depth = depth;
+                }
+                depth++;
+                for (var i=0; i<node.children.length; i++)
+                {
+                    weight += walk_depth_weight(node.children[i]);
+                }
+                depth--;
+                node.weight = weight;
+                return weight;
+            }
+            for (var i=0; i<roots.length; i++)
+            {
+                depth = 0;
+                walk_depth_weight(roots[i]);
+            }
+
+            // now figure out which row to place them
+            roots.sort(byWeight);
+
+            row = 2;
+            var walk_row = function(node)
+            {
+                node.row = row;
+                row++;
+                node.children.sort(byWeight);
+                for (var i=0; i<node.children.length; i++)
+                {
+                    walk_row(node.children[i]);
+                }
+            }
+
+            for (var i=0; i<roots.length; i++)
+            {
+                walk_row(roots[i]);
+            }
+
+
+            return roots;
+        }
+
+        function drawChart() {
+            // data prep
+            initCategory(events, 'Event');
+            initCategory(facilities, 'Facility');
+            initCategory(research, 'Research');
+
+            var all = {};
+            $.extend(all, events);
+            $.extend(all, research);
+            $.extend(all, facilities);
+            // $.extend(all, drops);
+
+            arrangeNodes(all);
+            var all_array = [];
+            for (var key in all)
+            {
+                all_array.push(all[key]);
+            }
+
+            // normalize row
+            all_array.sort(function(l, r) { return l.row - r.row; });
+            for (var i=0; i<all_array.length; i++)
+            {
+                all_array[i].row = i + 1;
+            }
+
+            var svg = d3.select("svg");
+            svg.attr("width", 1600);
+            svg.attr("height", 3600);
+            var rects = svg.selectAll("text")
+                .data(all_array).enter().append("text");
+            // rects.attr("width", 100);
+            // rects.attr("height", 100);
+            rects.attr("x", function(d) { return d.depth * 100; });
+            rects.attr("y", function(d) { return d.row * 20; });
+            rects.text(function(d) { return d.name; });
+            // rects.style("fill", "black");
+        }
+    </script>
+</head>
+
+<body>
+    <svg>
+    </svg>
+</body>
+
+</html>
