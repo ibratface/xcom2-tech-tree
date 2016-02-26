@@ -72,7 +72,7 @@ facilities = {
             power: 4,
         }
     },
-    advanced_warface_center: {
+    advanced_warfare_center: {
         requires: ['alien_biotech'],
         cost: {
             supplies: 115,
@@ -388,28 +388,28 @@ research = {
 // stuff used in combat
 items = {
     flashbang_grenade: {
-        requires: ['build_flashbang_grenade']
+        requires: ['mission_gatecrasher']
     },
     medkit: {
-        requires: ['build_medkit']
+        requires: ['mission_gatecrasher']
     },
     smoke_grenade: {
-        requires: ['build_smoke_grenade']
+        requires: ['mission_gatecrasher']
     },
     skulljack: {
-        requires: ['build_skulljack']
+        requires: ['proving_grounds']
     },
     smoke_bomb: {
-        requires: ['build_smoke_bomb']
+        requires: ['advanced_explosives', 'smoke_grenade']
     },
     nano_medkit: {
-        requires: ['build_nano_medkit']
+        requires: ['battlefield_medicine', 'medkit']
     },
     mimic_beacon: {
-        requires: ['build_mimic_beacon']
+        requires: ['faceless_autopsy']
     },
     hellweave: {
-        requires: ['build_hellweave']
+        requires: ['chryssalid_autopsy']
     },
     incendiary_grenade: {
         requires: ['experimental_grenade']
@@ -445,11 +445,8 @@ items = {
         requires: ['experimental_ammo']
     },
     proximity_mine: {
-        requires: ['build_proximity_mine']
+        requires: ['andromedon_autopsy']
     },
-    skulljack: {
-        requires: ['proving_grounds'],
-    }
 }
 
 // engineering build items
@@ -504,7 +501,7 @@ projects = {
         requires: ['muton_autopsy', 'proving_grounds']
     },
     advanced_explosives: {
-        requires: ['project_plasma_grenade']
+        requires: ['plasma_grenade']
     },
     skullmining: {
         requires: ['skulljack']
@@ -513,34 +510,35 @@ projects = {
 
 // item drops
 drops = {
-    faceless_corpse: {
-    },
-    chryssalid_corpse: {
-    },
-    viper_corpse: {
-    },
-    sectoid_corpse: {
-    },
-    muton_corpse: {
-    },
-    berserker_corpse: {
-    },
-    archon_corpse: {
-    },
-    gatekeeper_corpse: {
-    },
-    andromedon_corpse: {
-    },
-    facility_lead: {
-    },
-    datapad: {
-    },
-    data_cache: {
-    },
+    // faceless_corpse: {
+    // },
+    // chryssalid_corpse: {
+    // },
+    // viper_corpse: {
+    // },
+    // sectoid_corpse: {
+    // },
+    // muton_corpse: {
+    // },
+    // berserker_corpse: {
+    // },
+    // archon_corpse: {
+    // },
+    // gatekeeper_corpse: {
+    // },
+    // andromedon_corpse: {
+    // },
+    // facility_lead: {
+    // },
+    // datapad: {
+    // },
+    // data_cache: {
+    // },
     codex_brain: {
+        requires: ['skulljack_officer']
     },
     blacksite_vial: {
-        requires: ['blacksite_region'],
+        requires: ['mission_blacksite'],
     }
 }
 
@@ -552,7 +550,7 @@ events = {
     mission_guerrilla_ops: {
         requires: ['mission_gatecrasher'],
     },
-    radio_relays: {
+    radio_relay: {
         requires: ['resistance_radio']
     },
     blacksite_region: {

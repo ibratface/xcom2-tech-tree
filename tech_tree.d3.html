@@ -5,24 +5,33 @@
         #chart_div {
             margin: 50;
         }
+        .node {
+            /*stroke: #fff;
+            stroke-width: 1.5px;*/
+        }
+
+        .text {
+
+        }
+
+        .link {
+            stroke: #999;
+            stroke-opacity: .6;
+        }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script type="text/javascript" src="data.js"></script>
     <script type="text/javascript">
-
-        $(document).ready(function()
-        {
+        $(document).ready(function() {
             drawChart();
         });
 
-        function toMilliseconds(days)
-        {
+        function toMilliseconds(days) {
             return days * 24 * 60 * 60 * 1000;
         }
 
-        function initCategory(data, type)
-        {
+        function initNodes(data, type, color) {
             for (var key in data) {
                 data[key].name = key;
                 data[key].type = type;
@@ -31,55 +40,48 @@
                 data[key].weight = 0;
                 data[key].row = 1;
                 data[key].depth = 0;
+                data[key].color = color;
             }
         }
 
-        function arrangeNodes(data)
-        {
+        function constructTree(data) {
             // create tree structure
-            for (var key in data)
-            {
-                for (var i=0; i<data[key].requires.length; i++)
-                {
+            for (var key in data) {
+                for (var i = 0; i < data[key].requires.length; i++) {
                     var parent = data[key].requires[i];
-                    if (data[parent])
-                    {
+                    if (data[parent]) {
                         data[parent].children.push(data[key]);
                     }
                 }
             }
 
-            var byWeight = function(l, r) { return l.weight - r.weight; };
+            var byWeight = function(l, r) {
+                return l.weight - r.weight;
+            };
 
             var roots = [];
-            for (var key in data)
-            {
-                if (data[key].requires.length == 0)
-                {
+            for (var key in data) {
+                if (data[key].requires.length == 0) {
                     roots.push(data[key]);
                 }
             }
 
             // figure out the depth and weight of each node
             var depth = 0;
-            var walk_depth_weight = function(node)
-            {
+            var walk_depth_weight = function(node) {
                 var weight = 1;
-                if (node.depth < depth)
-                {
+                if (node.depth < depth) {
                     node.depth = depth;
                 }
                 depth++;
-                for (var i=0; i<node.children.length; i++)
-                {
+                for (var i = 0; i < node.children.length; i++) {
                     weight += walk_depth_weight(node.children[i]);
                 }
                 depth--;
                 node.weight = weight;
                 return weight;
             }
-            for (var i=0; i<roots.length; i++)
-            {
+            for (var i = 0; i < roots.length; i++) {
                 depth = 0;
                 walk_depth_weight(roots[i]);
             }
@@ -88,63 +90,129 @@
             roots.sort(byWeight);
 
             row = 2;
-            var walk_row = function(node)
-            {
+            var walk_row = function(node) {
                 node.row = row;
                 row++;
                 node.children.sort(byWeight);
-                for (var i=0; i<node.children.length; i++)
-                {
+                for (var i = 0; i < node.children.length; i++) {
                     walk_row(node.children[i]);
                 }
             }
 
-            for (var i=0; i<roots.length; i++)
-            {
+            for (var i = 0; i < roots.length; i++) {
                 walk_row(roots[i]);
             }
-
 
             return roots;
         }
 
         function drawChart() {
             // data prep
-            initCategory(events, 'Event');
-            initCategory(facilities, 'Facility');
-            initCategory(research, 'Research');
+            initNodes(events, 'Event', '#8BC34A');
+            initNodes(facilities, 'Facility', '#FFCA28');
+            initNodes(research, 'Research', '#82B1FF');
+            initNodes(projects, 'Project', '#EF5350');
+            initNodes(items, 'Item', '#5C6BC0');
+            initNodes(drops, 'Drop', '#B39DDB');
 
-            var all = {};
-            $.extend(all, events);
-            $.extend(all, research);
-            $.extend(all, facilities);
-            // $.extend(all, drops);
+            var data = {};
+            $.extend(data, events);
+            $.extend(data, research);
+            $.extend(data, facilities);
+            $.extend(data, items);
+            $.extend(data, projects);
+            $.extend(data, drops);
 
-            arrangeNodes(all);
-            var all_array = [];
-            for (var key in all)
-            {
-                all_array.push(all[key]);
+            constructTree(data);
+            var graph = {};
+            graph.nodes = [];
+            graph.links = [];
+            for (var key in data) {
+                graph.nodes.push(data[key]);
+                for (var i = 0; i < data[key].children.length; i++) {
+                    graph.links.push({
+                        source: data[key],
+                        target: data[key].children[i],
+                    });
+                }
             }
 
             // normalize row
-            all_array.sort(function(l, r) { return l.row - r.row; });
-            for (var i=0; i<all_array.length; i++)
-            {
-                all_array[i].row = i + 1;
+            graph.nodes.sort(function(l, r) {
+                return l.row - r.row;
+            });
+
+            for (var i = 0; i < graph.nodes.length; i++) {
+                graph.nodes[i].row = i + 1;
             }
 
+            // var drag = d3.behavior.drag()
+            //     .on("drag", dragmove);
+            //
+            // function dragmove(d) {
+            //     d.cx += d3.event.dx;
+            //     d.cy += d3.event.dy;
+            //     d3.select(this).attr("cx", function(d) {
+            //         return d.cx;
+            //     });
+            //     d3.select(this).attr("cy", function(d) {
+            //         return d.cy;
+            //     });
+            // }
+
             var svg = d3.select("svg");
-            svg.attr("width", 1600);
-            svg.attr("height", 3600);
-            var rects = svg.selectAll("text")
-                .data(all_array).enter().append("text");
-            // rects.attr("width", 100);
-            // rects.attr("height", 100);
-            rects.attr("x", function(d) { return d.depth * 100; });
-            rects.attr("y", function(d) { return d.row * 20; });
-            rects.text(function(d) { return d.name; });
-            // rects.style("fill", "black");
+            svg.attr("width", 3600);
+            svg.attr("height", 1800);
+
+            var nodes = svg.selectAll(".node")
+                .data(graph.nodes).enter().append("circle")
+                .attr("class", "node")
+                .attr("cx", function(d) {
+                    d.cx = d.depth * 200;
+                    return d.cx;
+                })
+                .attr("cy", function(d) {
+                    d.cy = d.row * 20;
+                    return d.cy;
+                })
+                .attr("r", function(d) {
+                    return 5;
+                })
+                .style("fill", function(d) {
+                    return d.color;
+                });
+
+            var texts = svg.selectAll(".text")
+                .data(graph.nodes).enter().append("text")
+                .attr("class", "text")
+                .attr("x", function(d) {
+                    return d.depth * 200;
+                })
+                .attr("y", function(d) {
+                    return d.row * 20;
+                })
+                .text(function(d) {
+                    return d.name;
+                });
+
+            var links = svg.selectAll(".link")
+                .data(graph.links).enter().append("line")
+                .attr("class", "link")
+                .attr("x1", function(d) {
+                    return d.source.cx;
+                })
+                .attr("y1", function(d) {
+                    return d.source.cy;
+                })
+                .attr("x2", function(d) {
+                    return d.target.cx;
+                })
+                .attr("y2", function(d) {
+                    return d.target.cy;
+                })
+                .style("fill", function(d) {
+                    //return color(d.color);
+                });
         }
     </script>
 </head>
