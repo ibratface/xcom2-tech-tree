@@ -1,16 +1,26 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style>
+    body {
+        background-color: black;
+    }
     .node {
-        stroke: #fff;
-        stroke-width: 1.5px;
+        stroke-width: 2px;
+        stroke-opacity: .8;
+        fill: black;
     }
 
-    .text {}
+    .text {
+        fill: #fff;
+        font-size: 14px;
+        font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+        text-transform: uppercase;
+        opacity: .8;
+    }
 
     .link {
-        stroke: #999;
-        stroke-opacity: .6;
+        stroke: #fff;
+        stroke-opacity: .25;
     }
 </style>
 
@@ -21,7 +31,7 @@
     <script>
         function initCategory(data, type, color) {
             for (var key in data) {
-                data[key].name = key;
+                data[key].name = key.split('_').join(' ');
                 data[key].type = type;
                 if (!data[key].requires) data[key].requires = [];
                 data[key].children = [];
@@ -77,8 +87,7 @@
 
             // now figure out which row to place them
             roots.sort(byWeight);
-
-            row = 2;
+            var row = 1;
             var walk_row = function(node) {
                 node.row = row;
                 row++;
@@ -87,7 +96,6 @@
                     walk_row(node.children[i]);
                 }
             }
-
             for (var i = 0; i < roots.length; i++) {
                 walk_row(roots[i]);
             }
@@ -126,18 +134,23 @@
                 }
             }
 
-            // normalize row
+            var width = 2300;
+            var height = 2000;
+
+            var dx = 300;
+            var dy = 20;
+            var cx = 100;
+
+            // normalize row and initialize position.
             graph.nodes.sort(function(l, r) {
                 return l.row - r.row;
             });
             for (var i = 0; i < graph.nodes.length; i++) {
                 graph.nodes[i].row = i + 1;
-                graph.nodes[i].x = graph.nodes[i].depth * 200;
-                graph.nodes[i].y = graph.nodes[i].row * 20;
+                graph.nodes[i].x = graph.nodes[i].depth * dx + cx;
+                graph.nodes[i].y = graph.nodes[i].row * dy;
             }
 
-            var width = 2300,
-                height = 2000;
             data['mission_gatecrasher'].size = 16;
             data['mission_gatecrasher'].fixed = true;
             // data['mission_gatecrasher'].x = width / 2;
@@ -156,11 +169,11 @@
 
             var force = d3.layout.force()
                 .size([width, height])
-                .gravity(1.5)
+                .gravity(3)
                 .linkDistance(0.5)
                 // .charge(-20000)
                 .charge(function(d, i) {
-                    return -18000 + (d.depth ^ 2);
+                    return -18000 + Math.pow(d.depth, 2);
                 })
                 .nodes(graph.nodes)
                 .links(graph.links);
@@ -178,20 +191,19 @@
                 .enter().append("circle")
                 .attr("class", "node")
                 .attr("r", function(d) {
-                    return 100 / (d.depth * 2 + 2);
+                    return 8;
+                    // return 50 / Math.pow(2, d.depth * 0.5);
                 })
-                .style("fill", function(d) {
-                    return color(d.color);
+                .style("stroke", function(d) {
+                    return d.color;
                 });
 
             var text = svg.selectAll(".text")
                 .data(graph.nodes)
                 .enter().append("text")
+                .attr("class", "text")
                 .style("fill", function(d) {
-                    return color('black');
-                })
-                .style("font-size", function(d) {
-                    return 14;
+                    return d.color;
                 })
                 .text(function(d) {
                     return d.name;
@@ -203,17 +215,13 @@
                 });
 
             var first = true;
-            var level = d3.scale.ordinal()
-                .domain(d3.range(10))
-                .rangePoints([0, 250 * 10], 1);
-
             force.on("tick", function(e) {
-                var k = e.alpha;
+                var k = 6 * e.alpha;
                 graph.nodes.forEach(function(d, i) {
                     if (first)
-                        d.x += (level(d.depth) - d.x) * k;
+                        d.x += (d.depth * dx - d.x) * k;
                     else
-                        d.x = level(d.depth);
+                        d.x = d.depth * dx + cx;
                 });
 
                 graph.links.forEach(function(d, i) {
@@ -243,17 +251,23 @@
                     });
 
                 text.attr("x", function(d) {
-                        return d.x;
+                        var bbox = this.getBBox();
+                        var width = bbox.width;
+                        var height = bbox.height;
+                        return d.x - width / 2;
                     })
                     .attr("y", function(d) {
-                        return d.y;
+                        var bbox = this.getBBox();
+                        var height = bbox.height;
+                        return d.y - height;
                     });
             });
 
             force.start();
             setTimeout(function() {
                 first = false;
-                force.start();
-            }, 5000);
+                force.gravity(1.5).start();
+            }, 5500);
         });
     </script>
+</body>
