@@ -1,18 +1,27 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style>
+    html {
+        height: 100%;
+    }
+
     body {
         background-color: black;
         font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+        min-height: 100%;
+        overflow: hidden;
     }
 
     svg {
-        width: 3000px;
-        height: 2000px;
+        width: 100%;
+        height: 100%;
     }
 
     #title {
         color: #81D4FA;
+        font-size: 32px;
+        font-weight: bold;
+        margin: 15px;
     }
 
     .event {
@@ -39,7 +48,13 @@
         stroke: #9C27B0;
     }
 
-    .node {
+    .node1 {
+        stroke-width: 2px;
+        opacity: 0.8;
+        r: 5;
+    }
+
+    .node2 {
         stroke-width: 2px;
         opacity: 0.8;
         r: 5;
@@ -64,6 +79,9 @@
 <script src="https://d3js.org/d3.v3.min.js"></script>
 <script type="text/javascript" src="data.js"></script>
 <script>
+    dx = 0;
+    dy = 0;
+
     function initNodes(data, type, color) {
         for (var key in data) {
             data[key].name = key.split('_').join(' ');
@@ -161,9 +179,9 @@
         var graph = {
             width: 2300,
             height: 1000,
-            xOffset: 50,
+            xOffset: 100,
             yOffset: 0,
-            xSpacing: 250,
+            xSpacing: 350,
             ySpacing: 20,
             root: data['mission_gatecrasher'],
         };
@@ -192,9 +210,10 @@
         graph.root.fixed = true;
 
         var svg = d3.select("svg");
-        // graph.width = $('svg').getBoundingClientRect().width;
-        // graph.height = svg.getBoundingClientRect().height;
+        console.log($('#title').height());
+        svg.attr('height', $(window).height() - $('#title').height());
         graph.root.y = graph.height / 2;
+        svg.append('text').text('XCOM').attr('class', 'title');
 
         var force = d3.layout.force()
             .size([graph.width, graph.height])
@@ -212,11 +231,18 @@
             .enter().append("line")
             .attr("class", "link");
 
-        var node = svg.selectAll(".node")
-            .data(graph.nodes)
+        var node1 = svg.selectAll(".node1")
+            .data(graph.links)
             .enter().append("circle")
             .attr("class", function(d) {
-                return "node " + d.type;
+                return "node1 " + d.source.type;
+            });
+
+        var node2 = svg.selectAll(".node2")
+            .data(graph.links)
+            .enter().append("circle")
+            .attr("class", function(d) {
+                return "node2 " + d.target.type;
             });
 
         var text = svg.selectAll(".text")
@@ -244,46 +270,84 @@
                 // d.target.y += ((d.source.weight)^(d.target.depth+1) - d.target.y * 0.001) * ky;
             });
 
-            link
-                .attr("x1", function(d) {
-                    return d.source.x;
-                })
-                .attr("y1", function(d) {
-                    return d.source.y;
-                })
-                .attr("x2", function(d) {
-                    return d.target.x;
-                })
-                .attr("y2", function(d) {
-                    return d.target.y;
-                });
-
-            node.attr("cx", function(d) {
-                    return d.x;
-                })
-                .attr("cy", function(d) {
-                    return d.y;
-                });
-
             text.attr("x", function(d) {
                     var bbox = this.getBBox();
-                    return d.x + 15;
+                    d.x1 = d.x - bbox.width/2 - 15;
+                    d.x2 = d.x + bbox.width/2 + 15;
+                    return d.x - bbox.width/2;
                 })
                 .attr("y", function(d) {
                     var bbox = this.getBBox();
-                    return d.y + (bbox.height / 4);
+                    d.y1 = d.y - bbox.height/3;
+                    d.y2 = d.y - bbox.height/3;
+                    return d.y;
+                });
+
+            node1.attr("cx", function(d) {
+                    return d.source.x2;
+                })
+                .attr("cy", function(d) {
+                    return d.source.y2;
+                });
+
+            node2.attr("cx", function(d) {
+                    return d.target.x1;
+                })
+                .attr("cy", function(d) {
+                    return d.target.y1;
+                });
+
+            link
+                .attr("x1", function(d) {
+                    return d.source.x2;
+                })
+                .attr("y1", function(d) {
+                    return d.source.y2;
+                })
+                .attr("x2", function(d) {
+                    return d.target.x1;
+                })
+                .attr("y2", function(d) {
+                    return d.target.y1;
                 });
         });
 
         force.start();
         setTimeout(function() {
+            force.stop();
             first = false;
             force.start();
+            setTimeout(function() {
+                force.stop();
+            }, 5000);
         }, 5100);
+
+        d3.select("body").on("mousemove", mousemove);
+
+        function mousemove() {
+            var pos = d3.mouse(this);
+            var w = $('body').width() / 2;
+            var h = $('body').height() / 2;
+            var x = pos[0] - w;
+            var y = pos[1] - h;
+            // dx = 0;
+            if (Math.abs(x) > w * 0.8) {
+                dx += x / w;
+            }
+            // dy = 0;
+            if (Math.abs(y) > h * 0.8) {
+                dy += y / h;
+            }
+            console.log(dx, dy);
+            d3.select('svg').attr('viewBox',
+                function(d) {
+                    return '' + dx + ' ' + dy + ' ' + $('svg').width() + ' ' + $('svg').height() + '';
+                });
+        }
     });
 </script>
 
 <body>
-    <h1 id="title">XCOM 2 TECH TREE</h1>
+    <div id="title">XCOM 2 TECH TREE</div>
     <svg></svg>
 </body>
