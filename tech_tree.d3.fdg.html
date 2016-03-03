@@ -51,7 +51,7 @@
     .node1 {
         stroke-width: 2px;
         opacity: 0.8;
-        r: 5;
+        /*r: 5;*/
     }
 
     .node2 {
@@ -94,7 +94,7 @@
             data[key].weight = 0;
             data[key].row = 1;
             data[key].depth = 0;
-            data[key].size = 1;
+            data[key].size = 2;
             data[key].color = color;
         }
     }
@@ -182,7 +182,7 @@
         var graph = {
             width: 2300,
             height: 1000,
-            xOffset: 1,
+            xOffset: 0,
             yOffset: 0,
             xSpacing: 1,
             ySpacing: 1,
@@ -203,27 +203,27 @@
         }
 
         // normalize row and initialize node locations
-        graph.nodes.sort(function(l, r) {
-            return l.row - r.row;
-        });
+        // graph.nodes.sort(function(l, r) {
+        //     return l.row - r.row;
+        // });
         for (var i = 0; i < graph.nodes.length; i++) {
             graph.nodes[i].row = i + 1;
             graph.nodes[i].x = graph.nodes[i].depth * graph.xSpacing + graph.xOffset;
             graph.nodes[i].y = graph.nodes[i].row * graph.ySpacing + graph.yOffset;
         }
-        // graph.root.fixed = true;
+        graph.root.fixed = true;
+        graph.root.x = 0;
+        graph.root.y = 0;
 
         var svg = d3.select("svg");
         console.log($('#title').height());
         svg.attr('height', $(window).height() - $('#title').height());
-        graph.root.y = graph.height / 2;
-        svg.append('text').text('XCOM').attr('class', 'title');
 
         var force = d3.layout.fruchtermanReingold()
             .autoArea(false)
-            .area(10000)
-            .gravity(1)
-            .speed(0.2)
+            .area(100000)
+            .gravity(0)
+            .speed(0.3)
             .iterations(1500)
             .nodes(graph.nodes)
             .links(graph.links);
@@ -250,6 +250,9 @@
         var node = svg.selectAll(".node1")
             .data(graph.nodes)
             .enter().append("circle")
+            .attr('r', function(d) {
+                return 8 / Math.pow(2, d.depth) + 2;
+            })
             .attr("class", function(d) {
                 return "node1 " + d.type;
             });
@@ -380,5 +383,5 @@
 
 <body>
     <div id="title">XCOM 2 TECH TREE</div>
-    <svg viewbox="-400 -200 800 400"></svg>
+    <svg viewbox="-800 -400 1600 800"></svg>
 </body>
