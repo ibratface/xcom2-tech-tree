@@ -89,16 +89,22 @@
             // now figure out which row to place them
             roots.sort(byWeight);
 
-            row = 2;
+            var row = 1;
             var walk_row = function(node) {
                 node.row = row;
-                row++;
                 node.children.sort(byWeight);
-                for (var i = 0; i < node.children.length; i++) {
-                    walk_row(node.children[i]);
+                var leaves = 0;
+                var i = 0;
+                for (; i < node.children.length; i++) {
+                    if (node.children[i].depth == node.depth + 1)
+                        leaves += walk_row(node.children[i]);
+                    else
+                        walk_row(node.children[i]);
+                    row = node.row + leaves;
                 }
+                if (leaves == 0) leaves = 1;
+                return leaves;
             }
-
             for (var i = 0; i < roots.length; i++) {
                 walk_row(roots[i]);
             }
@@ -137,14 +143,19 @@
                 }
             }
 
-            // normalize row
-            graph.nodes.sort(function(l, r) {
-                return l.row - r.row;
-            });
+            data['elerium_conduit'].row -= 2;
+            data['additional_comm_station'].row -= 2;
+            data['smoke_bomb'].row += 7;
+            data['smoke_grenade'].row += 44;
+            // data['medkit'].row += 20;
 
-            for (var i = 0; i < graph.nodes.length; i++) {
-                graph.nodes[i].row = i + 1;
-            }
+            // normalize row
+            // graph.nodes.sort(function(l, r) {
+            //     return l.row - r.row;
+            // });
+            // for (var i = 0; i < graph.nodes.length; i++) {
+            //     graph.nodes[i].row = i + 1;
+            // }
 
             // var drag = d3.behavior.drag()
             //     .on("drag", dragmove);
@@ -162,7 +173,7 @@
 
             var svg = d3.select("svg");
             svg.attr("width", 3600);
-            svg.attr("height", 1800);
+            svg.attr("height", 3000);
 
             var nodes = svg.selectAll(".node")
                 .data(graph.nodes).enter().append("circle")

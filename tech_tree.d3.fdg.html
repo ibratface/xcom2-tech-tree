@@ -1,21 +1,71 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style>
+    html {
+        height: 100%;
+    }
+
     body {
         background-color: black;
+        font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+        min-height: 100%;
+        overflow: hidden;
     }
-    .node {
+
+    svg {
+        width: 100%;
+        height: 100%;
+    }
+
+    #title {
+        color: #81D4FA;
+        font-size: 32px;
+        font-weight: bold;
+        margin: 15px;
+    }
+
+    .event {
+        stroke: #8BC34A;
+    }
+
+    .facility {
+        stroke: #FFCA28;
+    }
+
+    .research {
+        stroke: #82B1FF;
+    }
+
+    .project {
+        stroke: #EF5350;
+    }
+
+    .item {
+        stroke: #3F51B5;
+    }
+
+    .drop {
+        stroke: #9C27B0;
+    }
+
+    .node1 {
         stroke-width: 2px;
-        stroke-opacity: .8;
-        fill: black;
+        opacity: 0.8;
+        r: 5;
+    }
+
+    .node2 {
+        stroke-width: 2px;
+        opacity: 0.8;
+        r: 5;
     }
 
     .text {
-        fill: #fff;
-        font-size: 14px;
-        font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+        stroke: none;
+        fill: white;
         text-transform: uppercase;
-        opacity: .8;
+        font-size: 12px;
+        opacity: 0.8;
     }
 
     .link {
@@ -24,250 +74,280 @@
     }
 </style>
 
-<body>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-    <script src="https://d3js.org/d3.v3.min.js"></script>
-    <script type="text/javascript" src="data.js"></script>
-    <script>
-        function initCategory(data, type, color) {
-            for (var key in data) {
-                data[key].name = key.split('_').join(' ');
-                data[key].type = type;
-                if (!data[key].requires) data[key].requires = [];
-                data[key].children = [];
-                data[key].weight = 0;
-                data[key].row = 1;
-                data[key].depth = 0;
-                data[key].size = 8;
-                data[key].color = color;
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<script type="text/javascript" src="data.js"></script>
+<script>
+    dx = 0;
+    dy = 0;
+
+    function initNodes(data, type, color) {
+        for (var key in data) {
+            data[key].name = key.split('_').join(' ');
+            data[key].type = type;
+            if (!data[key].requires) data[key].requires = [];
+            data[key].children = [];
+            data[key].weight = 0;
+            data[key].row = 1;
+            data[key].depth = 0;
+            data[key].size = 8;
+            data[key].color = color;
+        }
+    }
+
+    function arrangeNodes(data) {
+        // create tree structure
+        for (var key in data) {
+            for (var i = 0; i < data[key].requires.length; i++) {
+                var parent = data[key].requires[i];
+                if (data[parent]) {
+                    data[parent].children.push(data[key]);
+                }
             }
         }
 
-        function arrangeNodes(data) {
-            // create tree structure
-            for (var key in data) {
-                for (var i = 0; i < data[key].requires.length; i++) {
-                    var parent = data[key].requires[i];
-                    if (data[parent]) {
-                        data[parent].children.push(data[key]);
-                    }
-                }
-            }
+        var byWeight = function(l, r) {
+            return l.weight - r.weight;
+        };
 
-            var byWeight = function(l, r) {
-                return l.weight - r.weight;
-            };
-
-            var roots = [];
-            for (var key in data) {
-                if (data[key].requires.length == 0) {
-                    roots.push(data[key]);
-                }
+        var roots = [];
+        for (var key in data) {
+            if (data[key].requires.length == 0) {
+                roots.push(data[key]);
             }
-
-            // figure out the depth and weight of each node
-            var depth = 0;
-            var walk_depth_weight = function(node) {
-                var weight = 1;
-                if (node.depth < depth) {
-                    node.depth = depth;
-                }
-                depth++;
-                for (var i = 0; i < node.children.length; i++) {
-                    weight += walk_depth_weight(node.children[i]);
-                }
-                depth--;
-                node.weight = weight;
-                return weight;
-            }
-            for (var i = 0; i < roots.length; i++) {
-                depth = 0;
-                walk_depth_weight(roots[i]);
-            }
-
-            // now figure out which row to place them
-            roots.sort(byWeight);
-            var row = 1;
-            var walk_row = function(node) {
-                node.row = row;
-                row++;
-                node.children.sort(byWeight);
-                for (var i = 0; i < node.children.length; i++) {
-                    walk_row(node.children[i]);
-                }
-            }
-            for (var i = 0; i < roots.length; i++) {
-                walk_row(roots[i]);
-            }
-
-            return roots;
         }
 
-        $(document).ready(function() {
-            // data prep
-            initCategory(events, 'Event', '#8BC34A');
-            initCategory(facilities, 'Facility', '#FFCA28');
-            initCategory(research, 'Research', '#82B1FF');
-            initCategory(projects, 'Project', '#EF5350');
-            initCategory(items, 'Item', '#5C6BC0');
-            initCategory(drops, 'Drop', '#B39DDB');
-
-            var data = {};
-            $.extend(data, events);
-            $.extend(data, research);
-            $.extend(data, facilities);
-            $.extend(data, items);
-            $.extend(data, projects);
-            $.extend(data, drops);
-
-            arrangeNodes(data);
-            var graph = {};
-            graph.nodes = [];
-            graph.links = [];
-            for (var key in data) {
-                graph.nodes.push(data[key]);
-                for (var i = 0; i < data[key].children.length; i++) {
-                    graph.links.push({
-                        source: data[key],
-                        target: data[key].children[i],
-                    });
-                }
+        // figure out the depth and weight of each node
+        var depth = 0;
+        var walk_depth_weight = function(node) {
+            var weight = 1;
+            if (node.depth < depth) {
+                node.depth = depth;
             }
-
-            var width = 2300;
-            var height = 2000;
-
-            var dx = 300;
-            var dy = 20;
-            var cx = 100;
-
-            // normalize row and initialize position.
-            graph.nodes.sort(function(l, r) {
-                return l.row - r.row;
-            });
-            for (var i = 0; i < graph.nodes.length; i++) {
-                graph.nodes[i].row = i + 1;
-                graph.nodes[i].x = graph.nodes[i].depth * dx + cx;
-                graph.nodes[i].y = graph.nodes[i].row * dy;
+            depth++;
+            for (var i = 0; i < node.children.length; i++) {
+                weight += walk_depth_weight(node.children[i]);
             }
+            depth--;
+            node.weight = weight;
+            return weight;
+        }
+        for (var i = 0; i < roots.length; i++) {
+            depth = 0;
+            walk_depth_weight(roots[i]);
+        }
 
-            data['mission_gatecrasher'].size = 16;
-            data['mission_gatecrasher'].fixed = true;
-            // data['mission_gatecrasher'].x = width / 2;
-            data['mission_gatecrasher'].y = height / 2;
-            data['mission_gatecrasher'].x = 200;
-            // data['mission_gatecrasher'].y = 100;
+        // now figure out which row to place them
+        roots.sort(byWeight);
 
-            var svg = d3.select("body").append("svg")
-                .attr("width", width)
-                .attr("height", height);
+        row = 2;
+        var walk_row = function(node) {
+            node.row = row;
+            row++;
+            node.children.sort(byWeight);
+            for (var i = 0; i < node.children.length; i++) {
+                walk_row(node.children[i]);
+            }
+        }
 
-            // var color = d3.scale.category20();
-            var color = function(x) {
-                return x;
-            };
+        for (var i = 0; i < roots.length; i++) {
+            walk_row(roots[i]);
+        }
 
-            var force = d3.layout.force()
-                .size([width, height])
-                .gravity(3)
-                .linkDistance(0.5)
-                // .charge(-20000)
-                .charge(function(d, i) {
-                    return -18000 + Math.pow(d.depth, 2);
-                })
-                .nodes(graph.nodes)
-                .links(graph.links);
+        return roots;
+    }
 
-            var link = svg.selectAll(".link")
-                .data(graph.links)
-                .enter().append("line")
-                .attr("class", "link")
-                .style("stroke-width", function(d) {
-                    return Math.sqrt(d.value);
+    $(document).ready(function() {
+        // data prep
+        initNodes(events, 'event');
+        initNodes(facilities, 'facility');
+        initNodes(research, 'research');
+        initNodes(projects, 'project');
+        initNodes(items, 'item');
+        initNodes(drops, 'drop');
+
+        var data = {};
+        $.extend(data, events);
+        $.extend(data, research);
+        $.extend(data, facilities);
+        $.extend(data, items);
+        $.extend(data, projects);
+        $.extend(data, drops);
+
+        arrangeNodes(data);
+        var graph = {
+            width: 2300,
+            height: 1000,
+            xOffset: 100,
+            yOffset: 0,
+            xSpacing: 350,
+            ySpacing: 20,
+            root: data['mission_gatecrasher'],
+        };
+
+        graph.nodes = [];
+        graph.links = [];
+        for (var key in data) {
+            graph.nodes.push(data[key]);
+            for (var i = 0; i < data[key].children.length; i++) {
+                graph.links.push({
+                    source: data[key],
+                    target: data[key].children[i],
                 });
+            }
+        }
 
-            var node = svg.selectAll(".node")
-                .data(graph.nodes)
-                .enter().append("circle")
-                .attr("class", "node")
-                .attr("r", function(d) {
-                    return 8;
-                    // return 50 / Math.pow(2, d.depth * 0.5);
-                })
-                .style("stroke", function(d) {
-                    return d.color;
-                });
+        // normalize row and initialize node locations
+        graph.nodes.sort(function(l, r) {
+            return l.row - r.row;
+        });
+        for (var i = 0; i < graph.nodes.length; i++) {
+            graph.nodes[i].row = i + 1;
+            graph.nodes[i].x = graph.nodes[i].depth * graph.xSpacing + graph.xOffset;
+            graph.nodes[i].y = graph.nodes[i].row * graph.ySpacing + graph.yOffset;
+        }
+        graph.root.fixed = true;
 
-            var text = svg.selectAll(".text")
-                .data(graph.nodes)
-                .enter().append("text")
-                .attr("class", "text")
-                .style("fill", function(d) {
-                    return d.color;
-                })
-                .text(function(d) {
-                    return d.name;
-                });
+        var svg = d3.select("svg");
+        console.log($('#title').height());
+        svg.attr('height', $(window).height() - $('#title').height());
+        graph.root.y = graph.height / 2;
+        svg.append('text').text('XCOM').attr('class', 'title');
 
-            node.append("title")
-                .text(function(d) {
-                    return d.name;
-                });
+        var force = d3.layout.force()
+            .size([graph.width, graph.height])
+            .gravity(3.4)
+            .linkDistance(1)
+            .charge(-15000)
+            // .charge(function(d, i) {
+            //     return -18000 + Math.pow(d.depth, 2);
+            // })
+            .nodes(graph.nodes)
+            .links(graph.links);
 
-            var first = true;
-            force.on("tick", function(e) {
-                var k = 6 * e.alpha;
-                graph.nodes.forEach(function(d, i) {
-                    if (first)
-                        d.x += (d.depth * dx - d.x) * k;
-                    else
-                        d.x = d.depth * dx + cx;
-                });
+        var link = svg.selectAll(".link")
+            .data(graph.links)
+            .enter().append("line")
+            .attr("class", "link");
 
-                graph.links.forEach(function(d, i) {
-                    // d.target.x += (((d.source.depth)^3)*50 - d.target.x * 0.5) * ky;
-                    // d.target.y += ((d.source.weight)^(d.target.depth+1) - d.target.y * 0.001) * ky;
-                });
-
-                link
-                    .attr("x1", function(d) {
-                        return d.source.x;
-                    })
-                    .attr("y1", function(d) {
-                        return d.source.y;
-                    })
-                    .attr("x2", function(d) {
-                        return d.target.x;
-                    })
-                    .attr("y2", function(d) {
-                        return d.target.y;
-                    });
-
-                node.attr("cx", function(d) {
-                        return d.x;
-                    })
-                    .attr("cy", function(d) {
-                        return d.y;
-                    });
-
-                text.attr("x", function(d) {
-                        var bbox = this.getBBox();
-                        var width = bbox.width;
-                        var height = bbox.height;
-                        return d.x - width / 2;
-                    })
-                    .attr("y", function(d) {
-                        var bbox = this.getBBox();
-                        var height = bbox.height;
-                        return d.y - height;
-                    });
+        var node1 = svg.selectAll(".node1")
+            .data(graph.links)
+            .enter().append("circle")
+            .attr("class", function(d) {
+                return "node1 " + d.source.type;
             });
 
+        var node2 = svg.selectAll(".node2")
+            .data(graph.links)
+            .enter().append("circle")
+            .attr("class", function(d) {
+                return "node2 " + d.target.type;
+            });
+
+        var text = svg.selectAll(".text")
+            .data(graph.nodes)
+            .enter().append("text")
+            .attr("class", function(d) {
+                return "text " + d.type;
+            })
+            .text(function(d) {
+                return d.name;
+            });
+
+        var first = true;
+        force.on("tick", function(e) {
+            var k = 8 * e.alpha;
+            graph.nodes.forEach(function(d, i) {
+                if (first)
+                    d.x += (d.depth * graph.xSpacing + graph.xOffset - d.x) * k;
+                else
+                    d.x = d.depth * graph.xSpacing + graph.xOffset;
+            });
+
+            graph.links.forEach(function(d, i) {
+                // d.target.x += (((d.source.depth)^3)*50 - d.target.x * 0.5) * ky;
+                // d.target.y += ((d.source.weight)^(d.target.depth+1) - d.target.y * 0.001) * ky;
+            });
+
+            text.attr("x", function(d) {
+                    var bbox = this.getBBox();
+                    d.x1 = d.x - bbox.width/2 - 15;
+                    d.x2 = d.x + bbox.width/2 + 15;
+                    return d.x - bbox.width/2;
+                })
+                .attr("y", function(d) {
+                    var bbox = this.getBBox();
+                    d.y1 = d.y - bbox.height/3;
+                    d.y2 = d.y - bbox.height/3;
+                    return d.y;
+                });
+
+            node1.attr("cx", function(d) {
+                    return d.source.x2;
+                })
+                .attr("cy", function(d) {
+                    return d.source.y2;
+                });
+
+            node2.attr("cx", function(d) {
+                    return d.target.x1;
+                })
+                .attr("cy", function(d) {
+                    return d.target.y1;
+                });
+
+            link
+                .attr("x1", function(d) {
+                    return d.source.x2;
+                })
+                .attr("y1", function(d) {
+                    return d.source.y2;
+                })
+                .attr("x2", function(d) {
+                    return d.target.x1;
+                })
+                .attr("y2", function(d) {
+                    return d.target.y1;
+                });
+        });
+
+        force.start();
+        setTimeout(function() {
+            force.stop();
+            first = false;
             force.start();
             setTimeout(function() {
-                first = false;
-                force.gravity(1.5).start();
-            }, 5500);
-        });
-    </script>
+                force.stop();
+            }, 5000);
+        }, 5100);
+
+        d3.select("body").on("mousemove", mousemove);
+
+        function mousemove() {
+            var pos = d3.mouse(this);
+            var w = $('body').width() / 2;
+            var h = $('body').height() / 2;
+            var x = pos[0] - w;
+            var y = pos[1] - h;
+            // dx = 0;
+            if (Math.abs(x) > w * 0.8) {
+                dx += x / w;
+            }
+            // dy = 0;
+            if (Math.abs(y) > h * 0.8) {
+                dy += y / h;
+            }
+            console.log(dx, dy);
+            d3.select('svg').attr('viewBox',
+                function(d) {
+                    return '' + dx + ' ' + dy + ' ' + $('svg').width() + ' ' + $('svg').height() + '';
+                });
+        }
+    });
+</script>
+
+<body>
+    <div id="title">XCOM 2 TECH TREE</div>
+    <svg></svg>
 </body>

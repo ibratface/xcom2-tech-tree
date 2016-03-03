@@ -21,6 +21,7 @@
 
         function initData(objs, type) {
             for (var key in objs) {
+                objs[key].name = key;
                 objs[key].type = type;
                 objs[key].start = null;
                 objs[key].end = null;
@@ -43,7 +44,17 @@
                     reqstr = reqs;
                 }
                 data.addRows([
-                    [key, key, objs[key].type, objs[key].start, objs[key].end, objs[key].duration, 0, reqstr]
+                    [
+                        key,
+                        key,
+                        objs[key].type,
+                        objs[key].start,
+                        objs[key].end,
+                        objs[key].duration,
+                        0,
+                        reqstr,
+                        'Tooltip!'
+                    ]
                 ]);
             }
         }
@@ -69,16 +80,20 @@
             all['elerium_conduit'].start = new Date(0, 0, 11);
 
             // now for the chart stuff
-            var otherData = new google.visualization.DataTable();
-            otherData.addColumn('string', 'Task ID');
-            otherData.addColumn('string', 'Task Name');
-            otherData.addColumn('string', 'Resource');
-            otherData.addColumn('date', 'Start');
-            otherData.addColumn('date', 'End');
-            otherData.addColumn('number', 'Duration');
-            otherData.addColumn('number', 'Percent Complete');
-            otherData.addColumn('string', 'Dependencies');
-            fillData(otherData, all);
+            var dataTable = new google.visualization.DataTable();
+            dataTable.addColumn('string', 'Task ID');
+            dataTable.addColumn('string', 'Task Name');
+            dataTable.addColumn('string', 'Resource');
+            dataTable.addColumn('date', 'Start');
+            dataTable.addColumn('date', 'End');
+            dataTable.addColumn('number', 'Duration');
+            dataTable.addColumn('number', 'Percent Complete');
+            dataTable.addColumn('string', 'Dependencies');
+            dataTable.addColumn({
+                type: 'string',
+                role: 'tooltip'
+            });
+            fillData(dataTable, all);
 
             var options = {
                 height: 3000,
@@ -102,7 +117,27 @@
 
             var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
 
-            chart.draw(otherData, options);
+            // function selectHandler(e) {
+            //     var selection = chart.getSelection();
+            //     var message = '';
+            //     for (var i = 0; i < selection.length; i++) {
+            //         var item = selection[i];
+            //         if (item.row != null && item.column != null) {
+            //             message += '{row:' + item.row + ',column:' + item.column + '}';
+            //         } else if (item.row != null) {
+            //             message += '{row:' + item.row + '}';
+            //         } else if (item.column != null) {
+            //             message += '{column:' + item.column + '}';
+            //         }
+            //     }
+            //     if (message == '') {
+            //         message = 'nothing';
+            //     }
+            //     alert('You selected ' + message);
+            // }
+            // google.visualization.events.addListener(chart, 'select', selectHandler);
+
+            chart.draw(dataTable, options);
         }
     </script>
 </head>
