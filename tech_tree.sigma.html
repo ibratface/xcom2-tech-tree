@@ -1,0 +1,169 @@
+<html>
+
+<head>
+    <style type="text/css">
+        #container {
+            max-width: 2000px;
+            height: 2000px;
+            margin: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container"></div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="sigma.js/sigma.min.js"></script>
+    <script src="sigma.js/plugins/sigma.plugins.animate.min.js"></script>
+    <script src="sigma.js/plugins/sigma.layout.fruchtermanReingold.js"></script>
+    <script type="text/javascript" src="data.js"></script>
+    <script>
+        function initNodes(data, type, color) {
+            for (var key in data) {
+                data[key].name = key;
+                data[key].type = type;
+                if (!data[key].requires) data[key].requires = [];
+                data[key].children = [];
+                data[key].weight = 0;
+                data[key].row = 1;
+                data[key].depth = 0;
+                data[key].color = color;
+                data[key].size = 1;
+            }
+        }
+
+
+        function arrangeNodes(data) {
+            // create tree structure
+            for (var key in data) {
+                for (var i = 0; i < data[key].requires.length; i++) {
+                    var parent = data[key].requires[i];
+                    if (data[parent]) {
+                        data[parent].children.push(data[key]);
+                    }
+                }
+            }
+
+            var byWeight = function(l, r) {
+                return l.weight - r.weight;
+            };
+
+            var roots = [];
+            for (var key in data) {
+                if (data[key].requires.length == 0) {
+                    roots.push(data[key]);
+                }
+            }
+
+            // figure out the depth and weight of each node
+            var depth = 0;
+            var walk_depth_weight = function(node) {
+                var weight = 1;
+                if (node.depth < depth) {
+                    node.depth = depth;
+                }
+                depth++;
+                for (var i = 0; i < node.children.length; i++) {
+                    weight += walk_depth_weight(node.children[i]);
+                }
+                depth--;
+                node.weight = weight;
+                return weight;
+            }
+            for (var i = 0; i < roots.length; i++) {
+                depth = 0;
+                walk_depth_weight(roots[i]);
+            }
+
+            // now figure out which row to place them
+            roots.sort(byWeight);
+            var row = 1;
+            var walk_row = function(node) {
+                node.row = row;
+                row++;
+                node.children.sort(byWeight);
+                for (var i = 0; i < node.children.length; i++) {
+                    walk_row(node.children[i]);
+                }
+            }
+            for (var i = 0; i < roots.length; i++) {
+                walk_row(roots[i]);
+            }
+
+            return roots;
+        }
+
+        $(document).ready(function() {
+            // data prep
+            initNodes(events, 'Event', '#8BC34A');
+            initNodes(facilities, 'Facility', '#FFCA28');
+            initNodes(research, 'Research', '#82B1FF');
+            initNodes(projects, 'Project', '#EF5350');
+            initNodes(items, 'Item', '#5C6BC0');
+            initNodes(drops, 'Drop', '#B39DDB');
+
+            var data = {};
+            $.extend(data, events);
+            $.extend(data, research);
+            $.extend(data, facilities);
+            $.extend(data, items);
+            $.extend(data, projects);
+            $.extend(data, drops);
+
+            arrangeNodes(data);
+
+            var graph = {};
+            graph.nodes = [];
+            graph.edges = [];
+            for (var key in data) {
+                graph.nodes.push(data[key]);
+                data[key].id = key;
+                data[key].label = key;
+                data[key].x = data[key].depth;
+                data[key].y = data[key].row;
+                data[key].size = 10 / (data[key].depth + 1) + 10;
+                for (var i = 0; i < data[key].requires.length; i++) {
+                    if (data[data[key].requires[i]])
+                        graph.edges.push({
+                            id: key + i,
+                            source: data[key].requires[i],
+                            target: key,
+                        });
+                }
+            }
+
+            var s = new sigma({
+                graph: graph,
+                container: 'container',
+                settings: {
+                    defaultNodeColor: '#ec5148',
+                    labelThreshold: 0,
+                    defaultLabelSize: 10,
+                    // labelSize: 'proportional',
+                    labelSizeRatio: 2,
+                    defaultLabelAlignment: 'center',
+                }
+            });
+
+            var config = {
+                autoArea: true,
+                // area: 1000,
+                gravity: 1,
+                speed: 0.1,
+                iterations: 1500,
+                // easing: sigma.utils.easings.cubicOut,
+                // duration: 1000,
+            }
+
+            var listener = sigma.layouts.fruchtermanReingold.configure(s, config);
+            // Bind all events:
+            listener.bind('start stop interpolate', function(event) {
+                console.log(event.type);
+            });
+
+            sigma.layouts.fruchtermanReingold.start(s);
+        });
+    </script>
+</body>
+
+</html>
