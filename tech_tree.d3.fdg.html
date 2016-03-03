@@ -12,10 +12,10 @@
         overflow: hidden;
     }
 
-    svg {
+    /*svg {
         width: 100%;
         height: 100%;
-    }
+    }*/
 
     #title {
         color: #81D4FA;
@@ -77,6 +77,8 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 <script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="d3.event.timer.js"></script>
+<script src="d3.layout.fruchtermanReingold.js"></script>
 <script type="text/javascript" src="data.js"></script>
 <script>
     dx = 0;
@@ -84,6 +86,7 @@
 
     function initNodes(data, type, color) {
         for (var key in data) {
+            data[key].id = key;
             data[key].name = key.split('_').join(' ');
             data[key].type = type;
             if (!data[key].requires) data[key].requires = [];
@@ -91,7 +94,7 @@
             data[key].weight = 0;
             data[key].row = 1;
             data[key].depth = 0;
-            data[key].size = 8;
+            data[key].size = 1;
             data[key].color = color;
         }
     }
@@ -179,10 +182,10 @@
         var graph = {
             width: 2300,
             height: 1000,
-            xOffset: 100,
+            xOffset: 1,
             yOffset: 0,
-            xSpacing: 350,
-            ySpacing: 20,
+            xSpacing: 1,
+            ySpacing: 1,
             root: data['mission_gatecrasher'],
         };
 
@@ -192,6 +195,7 @@
             graph.nodes.push(data[key]);
             for (var i = 0; i < data[key].children.length; i++) {
                 graph.links.push({
+                    id: key + i,
                     source: data[key],
                     target: data[key].children[i],
                 });
@@ -207,7 +211,7 @@
             graph.nodes[i].x = graph.nodes[i].depth * graph.xSpacing + graph.xOffset;
             graph.nodes[i].y = graph.nodes[i].row * graph.ySpacing + graph.yOffset;
         }
-        graph.root.fixed = true;
+        // graph.root.fixed = true;
 
         var svg = d3.select("svg");
         console.log($('#title').height());
@@ -215,14 +219,12 @@
         graph.root.y = graph.height / 2;
         svg.append('text').text('XCOM').attr('class', 'title');
 
-        var force = d3.layout.force()
-            .size([graph.width, graph.height])
-            .gravity(3.4)
-            .linkDistance(1)
-            .charge(-15000)
-            // .charge(function(d, i) {
-            //     return -18000 + Math.pow(d.depth, 2);
-            // })
+        var force = d3.layout.fruchtermanReingold()
+            .autoArea(false)
+            .area(10000)
+            .gravity(1)
+            .speed(0.2)
+            .iterations(1500)
             .nodes(graph.nodes)
             .links(graph.links);
 
@@ -231,123 +233,152 @@
             .enter().append("line")
             .attr("class", "link");
 
-        var node1 = svg.selectAll(".node1")
-            .data(graph.links)
-            .enter().append("circle")
-            .attr("class", function(d) {
-                return "node1 " + d.source.type;
-            });
+        // var node1 = svg.selectAll(".node1")
+        //     .data(graph.links)
+        //     .enter().append("circle")
+        //     .attr("class", function(d) {
+        //         return "node1 " + d.source.type;
+        //     });
+        //
+        // var node2 = svg.selectAll(".node2")
+        //     .data(graph.links)
+        //     .enter().append("circle")
+        //     .attr("class", function(d) {
+        //         return "node2 " + d.target.type;
+        //     });
 
-        var node2 = svg.selectAll(".node2")
-            .data(graph.links)
-            .enter().append("circle")
-            .attr("class", function(d) {
-                return "node2 " + d.target.type;
-            });
-
-        var text = svg.selectAll(".text")
+        var node = svg.selectAll(".node1")
             .data(graph.nodes)
-            .enter().append("text")
+            .enter().append("circle")
             .attr("class", function(d) {
-                return "text " + d.type;
-            })
-            .text(function(d) {
-                return d.name;
+                return "node1 " + d.type;
             });
+
+        // var text = svg.selectAll(".text")
+        //     .data(graph.nodes)
+        //     .enter().append("text")
+        //     .attr("class", function(d) {
+        //         return "text " + d.type;
+        //     })
+        //     .text(function(d) {
+        //         return d.name;
+        //     });
 
         var first = true;
         force.on("tick", function(e) {
-            var k = 8 * e.alpha;
-            graph.nodes.forEach(function(d, i) {
-                if (first)
-                    d.x += (d.depth * graph.xSpacing + graph.xOffset - d.x) * k;
-                else
-                    d.x = d.depth * graph.xSpacing + graph.xOffset;
-            });
+            // var k = 8 * e.alpha;
+            // graph.nodes.forEach(function(d, i) {
+            //     if (first)
+            //         d.x += (d.depth * graph.xSpacing + graph.xOffset - d.x) * k;
+            //     else
+            //         d.x = d.depth * graph.xSpacing + graph.xOffset;
+            // });
 
             graph.links.forEach(function(d, i) {
                 // d.target.x += (((d.source.depth)^3)*50 - d.target.x * 0.5) * ky;
                 // d.target.y += ((d.source.weight)^(d.target.depth+1) - d.target.y * 0.001) * ky;
             });
 
-            text.attr("x", function(d) {
-                    var bbox = this.getBBox();
-                    d.x1 = d.x - bbox.width/2 - 15;
-                    d.x2 = d.x + bbox.width/2 + 15;
-                    return d.x - bbox.width/2;
+            // text.attr("x", function(d) {
+            //         var bbox = this.getBBox();
+            //         d.x1 = d.x - bbox.width/2 - 15;
+            //         d.x2 = d.x + bbox.width/2 + 15;
+            //         return d.x - bbox.width/2;
+            //     })
+            //     .attr("y", function(d) {
+            //         var bbox = this.getBBox();
+            //         d.y1 = d.y - bbox.height/3;
+            //         d.y2 = d.y - bbox.height/3;
+            //         return d.y;
+            //     });
+
+            node.attr("cx", function(d) {
+                    return d.x;
                 })
-                .attr("y", function(d) {
-                    var bbox = this.getBBox();
-                    d.y1 = d.y - bbox.height/3;
-                    d.y2 = d.y - bbox.height/3;
+                .attr("cy", function(d) {
                     return d.y;
                 });
 
-            node1.attr("cx", function(d) {
-                    return d.source.x2;
-                })
-                .attr("cy", function(d) {
-                    return d.source.y2;
-                });
+            // node1.attr("cx", function(d) {
+            //         return d.source.x2;
+            //     })
+            //     .attr("cy", function(d) {
+            //         return d.source.y2;
+            //     });
+            //
+            // node2.attr("cx", function(d) {
+            //         return d.target.x1;
+            //     })
+            //     .attr("cy", function(d) {
+            //         return d.target.y1;
+            //     });
 
-            node2.attr("cx", function(d) {
-                    return d.target.x1;
-                })
-                .attr("cy", function(d) {
-                    return d.target.y1;
-                });
+            // link
+            //     .attr("x1", function(d) {
+            //         return d.source.x2;
+            //     })
+            //     .attr("y1", function(d) {
+            //         return d.source.y2;
+            //     })
+            //     .attr("x2", function(d) {
+            //         return d.target.x1;
+            //     })
+            //     .attr("y2", function(d) {
+            //         return d.target.y1;
+            //     });
 
             link
                 .attr("x1", function(d) {
-                    return d.source.x2;
+                    return d.source.x;
                 })
                 .attr("y1", function(d) {
-                    return d.source.y2;
+                    return d.source.y;
                 })
                 .attr("x2", function(d) {
-                    return d.target.x1;
+                    return d.target.x;
                 })
                 .attr("y2", function(d) {
-                    return d.target.y1;
+                    return d.target.y;
                 });
+
         });
 
         force.start();
-        setTimeout(function() {
-            force.stop();
-            first = false;
-            force.start();
-            setTimeout(function() {
-                force.stop();
-            }, 5000);
-        }, 5100);
+        // setTimeout(function() {
+        //     force.stop();
+        //     first = false;
+        //     force.start();
+        //     setTimeout(function() {
+        //         force.stop();
+        //     }, 5000);
+        // }, 5100);
 
-        d3.select("body").on("mousemove", mousemove);
+        // d3.select("body").on("mousemove", mousemove);
 
-        function mousemove() {
-            var pos = d3.mouse(this);
-            var w = $('body').width() / 2;
-            var h = $('body').height() / 2;
-            var x = pos[0] - w;
-            var y = pos[1] - h;
-            // dx = 0;
-            if (Math.abs(x) > w * 0.8) {
-                dx += x / w;
-            }
-            // dy = 0;
-            if (Math.abs(y) > h * 0.8) {
-                dy += y / h;
-            }
-            console.log(dx, dy);
-            d3.select('svg').attr('viewBox',
-                function(d) {
-                    return '' + dx + ' ' + dy + ' ' + $('svg').width() + ' ' + $('svg').height() + '';
-                });
-        }
+        // function mousemove() {
+        //     var pos = d3.mouse(this);
+        //     var w = $('body').width() / 2;
+        //     var h = $('body').height() / 2;
+        //     var x = pos[0] - w;
+        //     var y = pos[1] - h;
+        //     // dx = 0;
+        //     if (Math.abs(x) > w * 0.8) {
+        //         dx += x / w;
+        //     }
+        //     // dy = 0;
+        //     if (Math.abs(y) > h * 0.8) {
+        //         dy += y / h;
+        //     }
+        //     console.log(dx, dy);
+        //     d3.select('svg').attr('viewBox',
+        //         function(d) {
+        //             return '' + dx + ' ' + dy + ' ' + $('svg').width() + ' ' + $('svg').height() + '';
+        //         });
+        // }
     });
 </script>
 
 <body>
     <div id="title">XCOM 2 TECH TREE</div>
-    <svg></svg>
+    <svg viewbox="-400 -200 800 400"></svg>
 </body>
