@@ -140,8 +140,8 @@ facilities = {
             power: 5,
         }
     },
-    psionic_gate: {
-        requires: ['shadow_chamber', 'psionic_gate_item'],
+    upgraded_shadow_chamber: {
+        requires: ['shadow_chamber', 'psionic_gate'],
         cost: {
             supplies: 200,
             upkeep: 50,
@@ -381,7 +381,13 @@ research = {
         },
     },
     alien_encryption: {
-        requires: ['blacksite_vial'],
+        requires: ['blacksite_vial', 'codex_brain'],
+    },
+    encrypted_codex_data: {
+        requires: ['codex_brain'],
+    },
+    avatar_autopsy: {
+        requires: ['upgraded_shadow_chamber', 'avatar_corpse', 'stasis_suit']
     }
 }
 
@@ -410,6 +416,27 @@ items = {
     },
     hellweave: {
         requires: ['chryssalid_autopsy']
+    },
+    gremlin_mark_II: {
+        requires: ['advent_mec_breakdown']
+    },
+    gremlin_mark_III: {
+        requires: ['sectopod_breakdown']
+    },
+    battle_scanner: {
+        requires: ['advent_trooper_autopsy']
+    },
+    arc_blade: {
+        requires: ['advent_stun_lancer_autopsy']
+    },
+    plasma_blade: {
+        requires: ['archon_autopsy']
+    },
+    overdrive_serum: {
+        requires: ['berserker_autopsy']
+    },
+    alien_psi_amp: {
+        requires: ['gatekeeper_autopsy']
     },
     incendiary_grenade: {
         requires: ['experimental_grenade']
@@ -446,6 +473,60 @@ items = {
     },
     proximity_mine: {
         requires: ['andromedon_autopsy']
+    },
+    plated_vest: {
+        requires: ['experimental_armor'],
+    },
+    hazmat_vest: {
+        requires: ['experimental_armor'],
+    },
+    stasis_vest: {
+        requires: ['experimental_armor'],
+    },
+    predator_armor: {
+        requires: ['plated_armor']
+    },
+    warden_armor: {
+        requires: ['powered_armor']
+    },
+    mag_pistol: {
+        requires: ['magnetic_weapons']
+    },
+    magnetic_rifles: {
+        requires: ['magnetic_weapons']
+    },
+    shard_gun: {
+        requires: ['magnetic_weapons']
+    },
+    mag_cannon: {
+        requires: ['gauss_weapons']
+    },
+    gauss_rifle: {
+        requires: ['gauss_weapons']
+    },
+    flame_thrower: {
+        requires: ['experimental_heavy_weapon']
+    },
+    shredder_gun: {
+        requires: ['experimental_heavy_weapon']
+    },
+    plasma_blaster: {
+        requires: ['experimental_powered_weapon']
+    },
+    plasma_rifles: {
+        requires: ['plasma_rifle']
+    },
+    beam_pistol: {
+        requires: ['plasma_rifle']
+    },
+    shredstorm_cannon: {
+        requires: ['experimental_powered_weapon']
+    },
+    hellfire_projector: {
+        requires: ['experimental_powered_weapon']
+    },
+    blaster_launcher: {
+        requires: ['experimental_powered_weapon']
     },
 }
 
@@ -497,6 +578,15 @@ projects = {
     experimental_ammo: {
         requires: ['proving_grounds']
     },
+    experimental_armor: {
+        requires: ['proving_grounds', 'advent_shieldbearer_autopsy']
+    },
+    experimental_heavy_weapon: {
+        requires: ['exo_suit']
+    },
+    experimental_powered_weapon: {
+        requires: ['war_suit']
+    },
     plasma_grenade: {
         requires: ['muton_autopsy', 'proving_grounds']
     },
@@ -505,7 +595,19 @@ projects = {
     },
     skullmining: {
         requires: ['skulljack']
-    }
+    },
+    exo_suit: {
+        requires: ['plated_armor']
+    },
+    spider_suit: {
+        requires: ['plated_armor']
+    },
+    war_suit: {
+        requires: ['powered_armor']
+    },
+    wraith_suit: {
+        requires: ['powered_armor']
+    },
 }
 
 // item drops
@@ -534,11 +636,20 @@ drops = {
     // },
     // data_cache: {
     // },
+    psionic_gate: {
+        requires: ['codex_brain_coordinates']
+    },
     codex_brain: {
         requires: ['skulljack_officer']
     },
+    stasis_suit: {
+        requires: ['blacksite_vial_coordinates']
+    },
     blacksite_vial: {
         requires: ['mission_blacksite'],
+    },
+    avatar_corpse: {
+        requires: ['skulljack_codex'],
     }
 }
 
@@ -561,5 +672,20 @@ events = {
     },
     skulljack_officer: {
         requires: ['skulljack']
-    }
+    },
+    blacksite_vial_coordinates: {
+        requires: ['blacksite_vial']
+    },
+    codex_brain_coordinates: {
+        requires: ['codex_brain']
+    },
+    skulljack_codex: {
+        requires: ['encrypted_codex_data']
+    },
+    broadcast_tower: {
+        requires: ['avatar_autopsy']
+    },
+    final_mission: {
+        requires: ['broadcast_tower']
+    },
 }
