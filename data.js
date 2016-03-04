@@ -380,14 +380,26 @@ research = {
             viper_corpse: 2,
         },
     },
+    blacksite_vial_research: {
+        requires: ['blacksite_vial'],
+    },
+    psionic_gate_research: {
+        requires: ['upgraded_shadow_chamber'],
+    },
+    codex_brain_research: {
+        requires: ['codex_brain'],
+    },
     alien_encryption: {
         requires: ['blacksite_vial', 'codex_brain'],
     },
     encrypted_codex_data: {
-        requires: ['codex_brain'],
+        requires: ['codex_brain_research'],
+    },
+    stasis_suit_research: {
+        requires: ['stasis_suit'],
     },
     avatar_autopsy: {
-        requires: ['upgraded_shadow_chamber', 'avatar_corpse', 'stasis_suit']
+        requires: ['psionic_gate_research', 'avatar_corpse', 'stasis_suit_research']
     }
 }
 
@@ -674,10 +686,10 @@ events = {
         requires: ['skulljack']
     },
     blacksite_vial_coordinates: {
-        requires: ['blacksite_vial']
+        requires: ['blacksite_vial_research']
     },
     codex_brain_coordinates: {
-        requires: ['codex_brain']
+        requires: ['codex_brain_research']
     },
     skulljack_codex: {
         requires: ['encrypted_codex_data']

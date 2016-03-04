@@ -9,8 +9,8 @@
         font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
     }
     svg {
-        width: 2500px;
-        height: 2200px;
+        width: 2800px;
+        height: 2500px;
     }
 
     #title {
@@ -47,6 +47,7 @@
     .node1 {
         stroke-width: 2px;
         opacity: 0.8;
+        cursor: pointer;
         /*r: 5;*/
     }
 
@@ -56,17 +57,24 @@
         r: 5;
     }
 
+    .text:hover {
+        text-transform: uppercase;
+        fill: #fff;
+        font-weight: bolder;
+    }
+
     .text {
         stroke: none;
-        fill: #eee;
-        /*text-transform: uppercase;*/
-        font-size: 12px;
+        fill: #ccc;
+        font-size: 14px;
         opacity: 0.8;
+        cursor: pointer;
+        text-shadow: 1px 1px #000;
     }
 
     .link {
         stroke: #fff;
-        stroke-opacity: .25;
+        stroke-opacity: .2;
     }
 </style>
 
@@ -220,8 +228,8 @@
 
         var force = d3.layout.fruchtermanReingold()
             .autoArea(false)
-            .area(500000)
-            .gravity(0.5)
+            .area(1000000)
+            .gravity(0.75)
             .speed(0.2)
             .iterations(1000)
             .nodes(graph.nodes)
@@ -294,5 +302,6 @@
 
 <body>
     <!-- <div id="title">XCOM 2 TECH TREE</div> -->
-    <svg></svg>
+    <svg>
+    </svg>
 </body>
