@@ -414,14 +414,11 @@ items = {
     smoke_grenade: {
         requires: ['mission_gatecrasher']
     },
-    skulljack: {
-        requires: ['proving_grounds']
-    },
     smoke_bomb: {
-        requires: ['advanced_explosives', 'smoke_grenade']
+        requires: ['advanced_explosives']
     },
     nano_medkit: {
-        requires: ['battlefield_medicine', 'medkit']
+        requires: ['battlefield_medicine']
     },
     mimic_beacon: {
         requires: ['faceless_autopsy']
@@ -454,19 +451,19 @@ items = {
         requires: ['experimental_grenade']
     },
     incendiary_bomb: {
-        requires: ['advanced_explosives', 'incendiary_grenade']
+        requires: ['advanced_explosives']
     },
     acid_grenade: {
         requires: ['experimental_grenade']
     },
     acid_bomb: {
-        requires: ['advanced_explosives', 'acid_grenade']
+        requires: ['advanced_explosives']
     },
     gas_grenade: {
         requires: ['experimental_grenade']
     },
     gas_bomb: {
-        requires: ['advanced_explosives', 'gas_grenade']
+        requires: ['advanced_explosives']
     },
     ap_rounds: {
         requires: ['experimental_ammo']
@@ -591,7 +588,7 @@ projects = {
         requires: ['proving_grounds']
     },
     experimental_armor: {
-        requires: ['proving_grounds', 'advent_shieldbearer_autopsy']
+        requires: ['advent_shieldbearer_autopsy']
     },
     experimental_heavy_weapon: {
         requires: ['exo_suit']
@@ -600,10 +597,13 @@ projects = {
         requires: ['war_suit']
     },
     plasma_grenade: {
-        requires: ['muton_autopsy', 'proving_grounds']
+        requires: ['muton_autopsy']
     },
     advanced_explosives: {
         requires: ['plasma_grenade']
+    },
+    skulljack: {
+        requires: ['proving_grounds']
     },
     skullmining: {
         requires: ['skulljack']

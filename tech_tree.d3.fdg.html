@@ -60,7 +60,7 @@
     .text:hover {
         text-transform: uppercase;
         fill: #fff;
-        font-weight: bolder;
+        /*font-weight: bolder;*/
     }
 
     .text {
@@ -80,7 +80,7 @@
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-<script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="d3.event.timer.js"></script>
 <script src="d3.layout.fruchtermanReingold.js"></script>
 <script type="text/javascript" src="data.js"></script>
@@ -228,10 +228,9 @@
 
         var force = d3.layout.fruchtermanReingold()
             .autoArea(false)
-            .area(1000000)
+            .area(500000)
             .gravity(0.75)
-            .speed(0.2)
-            .iterations(1000)
+            .iterations(1500)
             .nodes(graph.nodes)
             .links(graph.links);
 
