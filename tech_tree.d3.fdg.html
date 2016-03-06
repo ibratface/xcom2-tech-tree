@@ -2,15 +2,81 @@
 <meta charset="utf-8">
 <style>
     html {
+        height: 100%;
+        width: 100%;
     }
 
     body {
         background-color: black;
         font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+        overflow: hidden;
+        height: 100%;
+        width: 100%;
+        padding: 0px;
+        margin: 0px;
+        background-image: url('logo2.png');
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
     }
+
+    #container
+    {
+        overflow: auto;
+        height: 100%;
+        width: 100%;
+        margin: 0px;
+        padding: 0px;
+    }
+
+    #dialog {
+        display: none;
+
+        color: #fff;
+        position: fixed;
+
+        width: 25%;
+        /*height: 50%;*/
+        bottom: 0px;
+        right: 0;
+
+        margin: 25px;
+        border: 1px;
+        border-style: solid;
+        border-color: #666;
+
+        background-color: #000;
+        opacity: 0.8;
+    }
+
+    #info {
+        margin: 25px;
+        font-size: 16px;
+    }
+
+    #info > h3 {
+        text-transform: uppercase;
+        font-weight: normal;
+    }
+
+    #info > table {
+        width: 100%;
+    }
+
+    #info td.resource {
+        text-align: left;
+        text-transform: capitalize;
+    }
+
+    #info td {
+        text-align: right;
+    }
+
     svg {
-        width: 2800px;
-        height: 2500px;
+        width: 2200px;
+        height: 2200px;
+        margin: 0px;
+        padding: 0px;
     }
 
     #title {
@@ -23,57 +89,74 @@
     .event {
         stroke: #8BC34A;
     }
+    .event:hover {
+        fill: #8BC34A;
+    }
 
     .facility {
         stroke: #FFCA28;
     }
+    .facility:hover {
+        fill: #FFCA28;
+    }
 
     .research {
         stroke: #82B1FF;
+    }
+    .research:hover {
+        fill: #82B1FF;
     }
 
     .project {
         stroke: #EF5350;
     }
 
+    .project:hover {
+        fill: #EF5350;
+    }
+
     .item {
         stroke: #3F51B5;
+    }
+
+    .item:hover {
+        fill: #3F51B5;
     }
 
     .drop {
         stroke: #9C27B0;
     }
 
-    .node1 {
-        stroke-width: 2px;
-        opacity: 0.8;
-        cursor: pointer;
-        /*r: 5;*/
+    .drop:hover {
+        fill: #9C27B0;
     }
 
-    .node2 {
+    .node {
         stroke-width: 2px;
-        opacity: 0.8;
-        r: 5;
+        opacity: 0.5;
+        cursor: pointer;
     }
 
     .text:hover {
-        text-transform: uppercase;
+        /*text-transform: uppercase;*/
         fill: #fff;
+        opacity: 1;
         /*font-weight: bolder;*/
     }
 
     .text {
+        text-transform: capitalize;
         stroke: none;
-        fill: #ccc;
+        fill: #999;
         font-size: 14px;
-        opacity: 0.8;
+        /*opacity: 0.8;*/
         cursor: pointer;
         text-shadow: 1px 1px #000;
     }
 
     .link {
         stroke: #fff;
+        stroke-width: 1px;
         stroke-opacity: .2;
     }
 </style>
@@ -88,7 +171,7 @@
     dx = 0;
     dy = 0;
 
-    function initNodes(data, type, color) {
+    function initNodes(data, type) {
         for (var key in data) {
             data[key].id = key;
             data[key].name = key.split('_').join(' ');
@@ -99,7 +182,6 @@
             data[key].row = 1;
             data[key].depth = 0;
             data[key].size = 2;
-            data[key].color = color;
         }
     }
 
@@ -216,20 +298,31 @@
             graph.nodes[i].row = i + 1;
             graph.nodes[i].x = graph.nodes[i].depth * graph.xSpacing + graph.xOffset;
             graph.nodes[i].y = graph.nodes[i].row * graph.ySpacing + graph.yOffset;
+            graph.nodes[i].size = 20 / (graph.nodes[i].depth + 1) + 2;
         }
         graph.root.fixed = true;
         graph.root.x = 0;
         graph.root.y = 0;
 
+        var outer_width = $('#container').width();
+        var outer_height = $('#container').height();
+        var inner_width = $('svg').width();
+        var inner_height = $('svg').height();
+        $('#container').scrollLeft((inner_width-outer_width)/2)
+        $('#container').scrollTop((inner_height-outer_height)/2)
+
+        var svg_width = $('svg').width();
+        var svg_height = $('svg').height();
         var svg = d3.select("svg")
             .attr('viewBox', function(d) {
-                return '' + -$('svg').width() / 2 + ' ' + -$('svg').height() / 2 + ' ' + $('svg').width() + ' ' + $('svg').height() + '';
+                return '' + -svg_width / 2 + ' ' + -svg_height / 2 + ' ' + svg_width + ' ' + svg_height + '';
             });;
 
         var force = d3.layout.fruchtermanReingold()
             .autoArea(false)
-            .area(500000)
+            .area(svg_width * svg_height / 8)
             .gravity(0.75)
+            .speed(0.1)
             .iterations(1500)
             .nodes(graph.nodes)
             .links(graph.links);
@@ -239,14 +332,17 @@
             .enter().append("line")
             .attr("class", "link");
 
-        var node = svg.selectAll(".node1")
+        var node = svg.selectAll(".node")
             .data(graph.nodes)
             .enter().append("circle")
             .attr('r', function(d) {
-                return 20 / (d.depth + 1) + 2;
+                return d.size;
             })
             .attr("class", function(d) {
-                return "node1 " + d.type;
+                return "node " + d.type;
+            })
+            .attr("id", function(d) {
+                return d.id;
             });
 
         var text = svg.selectAll(".text")
@@ -296,11 +392,42 @@
         });
 
         force.start();
+
+        var showInfo = function(d) {
+            $('#dialog').hide();
+            $('#dialog').slideDown(duration=200);
+            $('#info > h3').html(d.name);
+            $('#info > p').html(d.description);
+            $('#info > table').html('');
+            for (var resource in d.cost)
+            {
+                var row = $('<tr></tr>');
+                row.append('<td class="resource">' + resource + '</td>');
+                for (var difficulty in d.cost[resource])
+                    row.append('<td>' + d.cost[resource][difficulty] + '</td>');
+                row.appendTo('#info > table');
+            }
+            $('#info > p').html(d.description);
+        }
+
+        text.on('click', showInfo);
+        node.on('click', showInfo);
     });
 </script>
 
 <body>
-    <!-- <div id="title">XCOM 2 TECH TREE</div> -->
-    <svg>
-    </svg>
+    <div id='dialog'>
+        <div id='info'>
+            <h3>TITLE</h3>
+            <p>Description</p>
+            <table>
+                <tr><td>Cost<td><td>1<td><td>2<td><td>3<td><td>4<td></tr>
+            </table>
+        </div>
+    </div>
+    <div id="container">
+        <svg>
+        </svg>
+    </div>
+    <div id='title'><img src='logo.png'></img></div>
 </body>

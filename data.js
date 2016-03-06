@@ -3,149 +3,148 @@ facilities = {
     laboratory: {
         requires: ['mission_gatecrasher'],
         cost: {
-            supplies: 125,
-            upkeep: 35,
-            power: 3,
+            supplies: [125, 125, 125, 150],
+            upkeep: [35, 35, 35, 35],
+            power: [3, 3, 3, 3],
         }
     },
     additional_research_station: {
         requires: ['laboratory'],
         cost: {
-            supplies: 125,
-            upkeep: 40,
-            power: 3,
+            supplies: [125, 125, 125, 150],
+            upkeep: [40, 40, 40, 40],
+            power: [3, 3, 3, 3],
         }
     },
     workshop: {
         requires: ['mission_gatecrasher'],
         cost: {
-            supplies: 125,
-            upkeep: 35,
-            power: 1,
+            supplies: [125, 125, 125, 150],
+            upkeep: [35, 35, 35, 35],
+            power: [1, 1, 1, 1],
         }
     },
     additional_workbench: {
         requires: ['workshop'],
         cost: {
-            supplies: 100,
-            upkeep: 40,
-            power: 2,
+            supplies: [100, 100, 100, 100],
+            upkeep: [4, 40, 40, 40],
+            power: [2, 2, 2, 2],
         }
     },
     power_relay: {
         requires: ['mission_gatecrasher'],
         cost: {
-            supplies: 80,
-            upkeep: 10,
-            power: -3,
+            supplies: [80, 80, 80, 100],
+            upkeep: [10, 10, 10, 10],
+            power: [+3, +3, +3, +3],
         }
     },
     power_conduit: {
         requires: ['power_relay'],
         cost: {
-            supplies: 80,
-            upkeep: 10,
-            power: -2,
+            supplies: [80, 80, 80, 80],
+            upkeep: [10, 10, 10, 10],
+            power: [+2, +2, +2, +2],
         }
     },
     guerilla_tactics_school: {
         requires: ['mission_gatecrasher'],
         cost: {
-            supplies: 85,
-            upkeep: 25,
-            power: 3,
+            supplies: [85, 85, 85, 100],
+            upkeep: [25, 25, 25, 25],
+            power: [3, 3, 3, 3],
         }
     },
     resistance_comms: {
         requires: ['resistance_communications'],
         cost: {
-            supplies: 110,
-            upkeep: 25,
-            power: 3,
+            supplies: [110, 110, 110, 160],
+            upkeep: [25, 25, 25, 25],
+            power: [3, 3, 3, 3],
         }
     },
     additional_comm_station: {
         requires: ['resistance_comms', 'resistance_radio'],
         cost: {
-            supplies: 125,
-            upkeep: 35,
-            power: 4,
+            supplies: [125, 125, 125, 125],
+            upkeep: [35, 35, 35, 35],
+            power: [4, 4, 4, 4],
         }
     },
     advanced_warfare_center: {
         requires: ['alien_biotech'],
         cost: {
-            supplies: 115,
-            upkeep: 35,
-            power: 3,
+            supplies: [115, 115, 115, 175],
+            upkeep: [35, 35, 35, 35],
+            power: [3, 3, 3, 3],
         }
     },
     proving_grounds: {
         requires: ['advent_officer_autopsy'],
         cost: {
-            supplies: 100,
-            upkeep: 25,
-            power: 3,
+            supplies: [100, 100, 100, 125],
+            upkeep: [25, 25, 25, 25],
+            power: [3, 3, 3, 3],
         }
     },
     defense_matrix: {
         requires: ['advent_turret_breakdown'],
         cost: {
-
-            supplies: 75,
-            upkeep: 10,
-            power: 2,
+            supplies: [75, 75, 75, 150],
+            upkeep: [10, 10, 10, 10],
+            power: [2, 2, 2, 2],
         }
     },
     quad_turrets: {
         requires: ['defense_matrix'],
         cost: {
-            supplies: 75,
-            upkeep: 10,
-            power: 2,
+            supplies: [75, 75, 75, 75],
+            upkeep: [10, 10, 10, 10],
+            power: [2, 2, 2, 2],
         }
     },
     psi_lab: {
         requires: ['psionics'],
         cost: {
-            supplies: 175,
-            elerium: 10,
-            upkeep: 55,
-            power: 5,
+            supplies: [175, 175, 175, 250],
+            elerium: [10, 10, 10, 20],
+            upkeep: [55, 55, 55, 55],
+            power: [5, 5, 5, 5],
         }
     },
     second_cell: {
         requires: ['psi_lab'],
         cost: {
-            supplies: 225,
-            elerium: 10,
-            upkeep: 50,
-            power: 5,
+            supplies: [225, 225, 225, 225],
+            elerium: [10, 10, 10, 10],
+            upkeep: [50, 50, 50, 50],
+            power: [5, 5, 5, 5],
         }
     },
     elerium_conduit: {
         requires: ['elerium_research', 'power_relay'],
         cost: {
-            supplies: 150,
-            elerium: 20,
-            upkeep: 20,
-            power: -6,
+            supplies: [150, 150, 150, 150],
+            elerium: [20, 20, 20, 20],
+            upkeep: [20, 20, 20, 20],
+            power: [+6, +6, +6, +6],
         }
     },
     shadow_chamber: {
         requires: ['alien_encryption'],
         cost: {
-            supplies: 125,
-            upkeep: 30,
-            power: 5,
+            supplies: [125, 125, 125, 200],
+            upkeep: [30, 30, 30, 30],
+            power: [5, 5, 5, 5],
         }
     },
     upgraded_shadow_chamber: {
         requires: ['shadow_chamber', 'psionic_gate'],
         cost: {
-            supplies: 200,
-            upkeep: 50,
-            power: 4,
+            supplies: [200, 200, 200, 200],
+            upkeep: [50, 50, 50, 50],
+            power: [4, 4, 4, 4],
         }
     },
 }
@@ -158,7 +157,7 @@ research = {
     advent_officer_autopsy: {
         requires: ['alien_biotech'],
         cost: {
-            advent_officer_corpse: 1
+            advent_officer_corpse: [1, 1, 1, 1]
         },
     },
     advent_trooper_autopsy: {
@@ -339,29 +338,29 @@ research = {
             elerium: 5,
         }
     },
-    plasma_rifle: {
+    plasma_rifle_research: {
         requires: ['elerium_research'],
         cost: {
             alloy: 10,
             elerium: 10,
         }
     },
-    beam_cannon: {
-        requires: ['plasma_rifle'],
+    beam_cannon_research: {
+        requires: ['plasma_rifle_research'],
         cost: {
             alloy: 5,
             elerium: 5,
         }
     },
-    plasma_lance: {
-        requires: ['plasma_rifle'],
+    plasma_lance_research: {
+        requires: ['plasma_rifle_research'],
         cost: {
             alloy: 5,
             elerium: 5,
         }
     },
-    storm_gun: {
-        requires: ['plasma_rifle'],
+    storm_gun_research: {
+        requires: ['plasma_rifle_research'],
         cost: {
             alloy: 10,
         }
@@ -522,11 +521,25 @@ items = {
     plasma_blaster: {
         requires: ['experimental_powered_weapon']
     },
-    plasma_rifles: {
-        requires: ['plasma_rifle']
+    plasma_rifle: {
+        requires: ['plasma_rifle_research']
     },
     beam_pistol: {
-        requires: ['plasma_rifle']
+        requires: ['plasma_rifle_research']
+    },
+    beam_cannon: {
+        requires: ['beam_cannon_research'],
+        cost: {}
+    },
+    plasma_lance: {
+        requires: ['plasma_lance_research'],
+        cost: {}
+    },
+    storm_gun: {
+        requires: ['storm_gun_research'],
+        cost: {
+
+        }
     },
     shredstorm_cannon: {
         requires: ['experimental_powered_weapon']
