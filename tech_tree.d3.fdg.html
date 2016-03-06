@@ -63,6 +63,15 @@
         width: 100%;
     }
 
+    #info th.resource {
+        text-align: left;
+        text-transform: capitalize;
+    }
+
+    #info th {
+        text-align: right;
+    }
+
     #info td.resource {
         text-align: left;
         text-transform: capitalize;
@@ -399,6 +408,17 @@
             $('#info > h3').html(d.name);
             $('#info > p').html(d.description);
             $('#info > table').html('');
+            if (d.cost)
+            {
+                $('#info > table')
+                    .append('<tr>\
+                        <th class="resource">Costs</th>\
+                        <th>R</th>\
+                        <th>V</th>\
+                        <th>C</th>\
+                        <th>L</th>\
+                        </tr>');
+            }
             for (var resource in d.cost)
             {
                 var row = $('<tr></tr>');

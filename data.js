@@ -163,142 +163,97 @@ research = {
     advent_trooper_autopsy: {
         requires: ['advent_officer_autopsy'],
         cost: {
-            advent_trooper_corpse: 1
-        },
-        instant_cost: {
-            advent_trooper_corpse: 10
+            advent_trooper_corpse: ['1/10', '1/15', '1/15', '1/25'],
         },
     },
     advent_mec_breakdown: {
         requires: ['advent_officer_autopsy'],
         cost: {
-            advent_mec_corpse: 1
-        },
-        instant_cost: {
-            advent_mec_corpse: 3
+            advent_mec_corpse: ['1/3', '1/4', '1/4', '1/7'],
         },
     },
     advent_stun_lancer_autopsy: {
         requires: ['advent_officer_autopsy'],
         cost: {
-            advent_stun_lancer_corpse: 1
-        },
-        instant_cost: {
-            advent_stun_lancer_corpse: 4
+            advent_stun_lancer_corpse: ['1/4', '1/6', '1/6', '1/9'],
         },
     },
     advent_shieldbearer_autopsy: {
         requires: ['advent_officer_autopsy'],
         cost: {
-            advent_shieldbearer_corpse: 1
-        },
-        instant_cost: {
-            advent_shieldbearer_corpse: 4
+            advent_shieldbearer_corpse: ['1/4', '1/4', '1/4', '1/7'],
         },
     },
     advent_turret_breakdown: {
         requires: ['advent_officer_autopsy'],
         cost: {
-            advent_turret_corpse: 1
-        },
-        instant_cost: {
-            advent_turret_corpse: 3
+            advent_turret_corpse: ['1/3', '1/3', '1/3', '1/6'],
         },
     },
     sectopod_breakdown: {
         requires: ['advent_officer_autopsy'],
         cost: {
-            sectopod_corpse: 1
-        },
-        instant_cost: {
-            sectopod_corpse: 3
+            sectopod_corpse: ['1/3', '1/6', '1/6', '1/9'],
         },
     },
     faceless_autopsy: {
         requires: ['alien_biotech'],
         cost: {
-            faceless_corpse: 1
-        },
-        instant_cost: {
-            faceless_corpse: 3
+            faceless_corpse: ['1/3', '1/4', '1/4', '1/7'],
         },
     },
     chryssalid_autopsy: {
         requires: ['alien_biotech'],
         cost: {
-            chryssalid_corpse: 1
-        },
-        instant_cost: {
-            chryssalid_corpse: 15
+            chryssalid_corpse: ['1/15', '1/15', '1/15', '1/20'],
         },
     },
     viper_autopsy: {
         requires: ['alien_biotech'],
         cost: {
-            viper_corpse: 1
-        },
-        instant_cost: {
-            viper_corpse: 5
+            viper_corpse: ['1/5', '1/5', '1/5', '1/8'],
         },
     },
     sectoid_autopsy: {
         requires: ['alien_biotech'],
         cost: {
-            sectoid_corpse: 1
-        },
-        instant_cost: {
-            sectoid_corpse: 6
+            sectoid_corpse: ['1/6', '1/6', '1/6', '1/10'],
         },
     },
     muton_autopsy: {
         requires: ['alien_biotech'],
         cost: {
-            muton_corpse: 1
-        },
-        instant_cost: {
-            muton_corpse: 5
+            muton_corpse: ['1/5', '1/6', '1/6', '1/9'],
         },
     },
     berserker_autopsy: {
         requires: ['alien_biotech'],
         cost: {
-            berserker_corpse: 1
-        },
-        instant_cost: {
-            berserker_corpse: 5
+            berserker_corpse: ['1/6', '1/6', '1/6', '1/9'],
         },
     },
     archon_autopsy: {
         requires: ['alien_biotech'],
         cost: {
-            archon_corpse: 1
-        },
-        instant_cost: {
-            archon_corpse: 3
+            archon_corpse: ['1/5', '1/5', '1/5', '1/8'],
         },
     },
     gatekeeper_autopsy: {
         requires: ['alien_biotech'],
         cost: {
-            gatekeeper_corpse: 1
-        },
-        instant_cost: {
-            gatekeeper_corpse: 3
+            gatekeeper_corpse: ['1/3', '1/6', '1/6', '1/9'],
         },
     },
     andromedon_autopsy: {
         requires: ['alien_biotech'],
         cost: {
-            andromedon_corpse: 1
-        },
-        instant_cost: {
-            andromedon_corpse: 4
+            andromedon_corpse: ['1/5', '1/5', '1/5', '1/8'],
         },
     },
     psionics: {
         requires: ['sectoid_autopsy'],
         cost: {
-            elerium: 5
+            elerium: [5, 5, 5, 10],
         }
     },
     alien_biotech: {
@@ -316,19 +271,19 @@ research = {
     hybrid_materials: {
         requires: ['mission_gatecrasher'],
         cost: {
-            advent_trooper_corpse: 2
+            advent_trooper_corpse: [2, 2, 2, 4],
         },
     },
     plated_armor: {
         requires: ['hybrid_materials'],
         cost: {
-            alloy: 10
+            alloy: [10, 10, 10, 15],
         },
     },
     elerium_research: {
         requires: ['gauss_weapons', 'plated_armor'],
         cost: {
-            elerium: 20
+            elerium: [20, 20, 20, 40],
         },
     },
     powered_armor: {
@@ -341,28 +296,28 @@ research = {
     plasma_rifle_research: {
         requires: ['elerium_research'],
         cost: {
-            alloy: 10,
-            elerium: 10,
+            alloy: [20, 20, 20, 30],
+            elerium: [5, 5, 5, 10],
         }
     },
     beam_cannon_research: {
         requires: ['plasma_rifle_research'],
         cost: {
-            alloy: 5,
-            elerium: 5,
+            alloy: [5, 5, 5, 10],
+            elerium: [5, 5, 5, 10],
         }
     },
     plasma_lance_research: {
         requires: ['plasma_rifle_research'],
         cost: {
-            alloy: 5,
-            elerium: 5,
+            alloy: [5, 5, 5, 10],
+            elerium: [5, 5, 5, 10],
         }
     },
     storm_gun_research: {
         requires: ['plasma_rifle_research'],
         cost: {
-            alloy: 10,
+            alloy: [10, 10, 10, 20],
         }
     },
     resistance_communications: {
@@ -371,28 +326,30 @@ research = {
     resistance_radio: {
         requires: ['resistance_communications']
     },
-    battlefield_medicine: {
-        requires: ['viper_autopsy'],
-        cost: {
-            supplies: 50,
-            elerium_core: 1,
-            viper_corpse: 2,
-        },
-    },
     blacksite_vial_research: {
         requires: ['blacksite_vial'],
     },
     psionic_gate_research: {
         requires: ['upgraded_shadow_chamber'],
+        cost: {
+            supplies: [65, 65, 65, 65],
+            elerium: [10, 10, 10, 10],
+        }
     },
     codex_brain_research: {
         requires: ['codex_brain'],
+        cost: {
+            scientist: [2, 2, 2, 2],
+        }
     },
     alien_encryption: {
         requires: ['blacksite_vial', 'codex_brain'],
     },
     encrypted_codex_data: {
         requires: ['codex_brain_research'],
+        cost: {
+            scientist: [4, 4, 4, 4],
+        }
     },
     stasis_suit_research: {
         requires: ['stasis_suit'],
@@ -405,46 +362,225 @@ research = {
 // stuff used in combat
 items = {
     flashbang_grenade: {
-        requires: ['mission_gatecrasher']
+        requires: ['mission_gatecrasher'],
+        cost: {
+            supplies: [35,35,35,35],
+        }
     },
     medkit: {
-        requires: ['mission_gatecrasher']
+        requires: ['mission_gatecrasher'],
+        cost: {
+            supplies: [35,35,35,35],
+        }
     },
     smoke_grenade: {
-        requires: ['mission_gatecrasher']
+        requires: ['mission_gatecrasher'],
+        cost: {
+            supplies: [25,25,25,25],
+        }
     },
     smoke_bomb: {
-        requires: ['advanced_explosives']
+        requires: ['advanced_explosives'],
+        cost: {
+            supplies: [50,50,50,60],
+        }
     },
     nano_medkit: {
-        requires: ['battlefield_medicine']
+        requires: ['battlefield_medicine'],
+        cost: {
+            supplies: [50,50,50,50],
+            viper_corpse: [1,1,1,1],
+        }
     },
     mimic_beacon: {
-        requires: ['faceless_autopsy']
+        requires: ['faceless_autopsy'],
+        cost: {
+            supplies: [50,50,50,50],
+            faceless_corpse: [2,2,2,2],
+        }
     },
     hellweave: {
-        requires: ['chryssalid_autopsy']
+        requires: ['chryssalid_autopsy'],
+        cost: {
+            supplies: [65,65,65,65],
+            chryssalid_corpse: [2,2,2,2],
+        }
     },
     gremlin_mark_II: {
-        requires: ['advent_mec_breakdown']
+        requires: ['advent_mec_breakdown'],
+        cost: {
+            supplies: [50,50,50,60],
+            alloy: [5,5,5,15],
+            engineers: [2,2,2,2],
+        }
     },
     gremlin_mark_III: {
-        requires: ['sectopod_breakdown']
+        requires: ['sectopod_breakdown'],
+        cost: {
+            supplies: [75,75,75,100],
+            alloy: [10,10,10,15],
+            elerium: [10,10,10,20],
+            engineers: [3,3,3,3],
+        }
     },
     battle_scanner: {
-        requires: ['advent_trooper_autopsy']
+        requires: ['advent_trooper_autopsy'],
+        cost: {
+            supplies: [30,30,30,30],
+        }
     },
     arc_blade: {
-        requires: ['advent_stun_lancer_autopsy']
+        requires: ['advent_stun_lancer_autopsy'],
+        cost: {
+            supplies: [90,90,90,100],
+            alloy: [10,10,10,15],
+            engineers: [1,1,1,1],
+        }
     },
-    plasma_blade: {
-        requires: ['archon_autopsy']
+    fusion_blade: {
+        requires: ['archon_autopsy'],
+        cost: {
+            supplies: [180,180,180,200],
+            alloy: [10,10,10,25],
+            elerium: [10,10,10,35],
+            engineers: [3,3,3,3],
+        }
     },
     overdrive_serum: {
-        requires: ['berserker_autopsy']
+        requires: ['berserker_autopsy'],
+        cost: {
+            supplies: [35,35,35,35],
+            chryssalid_corpse: [1,1,1,1],
+        }
+    },
+    advanced_psi_amp: {
+        requires: ['psionics'],
+        cost: {
+            supplies: [70,70,70,80],
+            alloy: [10,10,10,10],
+            elerium: [10,10,10,25],
+            sectoid_corpse: [2,2,2,3],
+            engineers: [2,2,2,2],
+        }
     },
     alien_psi_amp: {
-        requires: ['gatekeeper_autopsy']
+        requires: ['gatekeeper_autopsy'],
+        cost: {
+            supplies: [200,200,200,200],
+            alloy: [10,10,10,10],
+            elerium: [15,15,15,45],
+            gatekeeper_corpse: [1,1,1,2],
+            engineers: [3,3,3,3],
+        }
+    },
+    proximity_mine: {
+        requires: ['andromedon_autopsy'],
+        cost: {
+            supplies: [100,100,100,100],
+        }
+    },
+    predator_armor: {
+        requires: ['plated_armor'],
+        cost: {
+            supplies: [150,150,150,300],
+            alloy: [20,20,20,60],
+            advent_trooper_corpse: [6,6,6,12],
+            engineers: [1,1,1,1],
+        }
+    },
+    warden_armor: {
+        requires: ['powered_armor'],
+        cost: {
+            supplies: [300,300,300,600],
+            alloy: [40,40,40,90],
+            elerium: [20,20,20,75],
+            engineers: [3,3,3,3],
+        }
+    },
+    mag_pistol: {
+        requires: ['magnetic_weapons'],
+        cost: {
+            supplies: [60,60,60,70],
+            alloy: [5,5,5,10],
+            engineers: [1,1,1,1],
+        }
+    },
+    magnetic_rifles: {
+        requires: ['magnetic_weapons'],
+        cost: {
+            supplies: [125,125,125,200],
+            alloy: [10,10,10,30],
+            engineers: [1,1,1,1],
+        }
+    },
+    shard_gun: {
+        requires: ['magnetic_weapons'],
+        cost: {
+            supplies: [75,75,75,75],
+            alloy: [5,5,5,15],
+            engineers: [2,2,2,2],
+        }
+    },
+    mag_cannon: {
+        requires: ['gauss_weapons'],
+        cost: {
+            supplies: [150,150,150,150],
+            alloy: [10,10,10,25],
+            engineers: [2,2,2,2],
+        }
+    },
+    gauss_rifle: {
+        requires: ['gauss_weapons'],
+        cost: {
+            supplies: [150,150,150,175],
+            alloy: [10,10,10,25],
+            engineers: [2,2,2,2],
+        }
+    },
+    plasma_rifle: {
+        requires: ['plasma_rifle_research'],
+        cost: {
+            supplies: [250,250,250,500],
+            alloy: [20,20,20,50],
+            elerium: [10,10,10,60],
+            engineers: [3,3,3,3],
+        }
+    },
+    beam_pistol: {
+        requires: ['plasma_rifle_research'],
+        cost: {
+            supplies: [125,125,125,150],
+            alloy: [10,10,10,25],
+            elerium: [10,10,10,25],
+            engineers: [3,3,3,3],
+        }
+    },
+    beam_cannon: {
+        requires: ['beam_cannon_research'],
+        cost: {
+            supplies: [250,250,250,400],
+            alloy: [20,20,20,60],
+            elerium: [10,10,10,40],
+            engineers: [4,4,4,4],
+        }
+    },
+    plasma_lance: {
+        requires: ['plasma_lance_research'],
+        cost: {
+            supplies: [300,300,300,500],
+            alloy: [20,20,20,50],
+            elerium: [10,10,10,60],
+            engineers: [4,4,4,4],
+        }
+    },
+    storm_gun: {
+        requires: ['storm_gun_research'],
+        cost: {
+            supplies: [140,140,140,200],
+            alloy: [10,10,10,40],
+            elerium: [10,10,10,40],
+            engineers: [4,4,4,4],
+        }
     },
     incendiary_grenade: {
         requires: ['experimental_grenade']
@@ -479,9 +615,6 @@ items = {
     venom_rounds: {
         requires: ['experimental_ammo']
     },
-    proximity_mine: {
-        requires: ['andromedon_autopsy']
-    },
     plated_vest: {
         requires: ['experimental_armor'],
     },
@@ -491,27 +624,6 @@ items = {
     stasis_vest: {
         requires: ['experimental_armor'],
     },
-    predator_armor: {
-        requires: ['plated_armor']
-    },
-    warden_armor: {
-        requires: ['powered_armor']
-    },
-    mag_pistol: {
-        requires: ['magnetic_weapons']
-    },
-    magnetic_rifles: {
-        requires: ['magnetic_weapons']
-    },
-    shard_gun: {
-        requires: ['magnetic_weapons']
-    },
-    mag_cannon: {
-        requires: ['gauss_weapons']
-    },
-    gauss_rifle: {
-        requires: ['gauss_weapons']
-    },
     flame_thrower: {
         requires: ['experimental_heavy_weapon']
     },
@@ -520,26 +632,6 @@ items = {
     },
     plasma_blaster: {
         requires: ['experimental_powered_weapon']
-    },
-    plasma_rifle: {
-        requires: ['plasma_rifle_research']
-    },
-    beam_pistol: {
-        requires: ['plasma_rifle_research']
-    },
-    beam_cannon: {
-        requires: ['beam_cannon_research'],
-        cost: {}
-    },
-    plasma_lance: {
-        requires: ['plasma_lance_research'],
-        cost: {}
-    },
-    storm_gun: {
-        requires: ['storm_gun_research'],
-        cost: {
-
-        }
     },
     shredstorm_cannon: {
         requires: ['experimental_powered_weapon']
@@ -595,43 +687,110 @@ built_item = {
 // proving ground projects
 projects = {
     experimental_grenade: {
-        requires: ['proving_grounds']
+        requires: ['proving_grounds'],
+        cost: {
+            elerium_core: [1, 1, 1, 1],
+        },
     },
     experimental_ammo: {
-        requires: ['proving_grounds']
+        requires: ['proving_grounds'],
+        cost: {
+            elerium_core: [1, 1, 1, 1],
+        },
     },
     experimental_armor: {
-        requires: ['advent_shieldbearer_autopsy']
+        requires: ['advent_shieldbearer_autopsy'],
+        cost: {
+            elerium_core: [1, 1, 1, 1],
+        },
     },
     experimental_heavy_weapon: {
-        requires: ['exo_suit']
+        requires: ['exo_suit'],
+        cost: {
+            elerium_core: [1, 1, 1, 1],
+        },
     },
     experimental_powered_weapon: {
-        requires: ['war_suit']
+        requires: ['war_suit'],
+        cost: {
+            elerium_core: [1, 1, 1, 1],
+            supplies: [50, 50, 50, 100],
+        },
+    },
+    battlefield_medicine: {
+        requires: ['viper_autopsy'],
+        cost: {
+            elerium_core: [1, 1, 1, 1],
+            supplies: [50, 50, 50, 75],
+            viper_corpse: [2, 2, 2, 3],
+        },
     },
     plasma_grenade: {
-        requires: ['muton_autopsy']
+        requires: ['muton_autopsy'],
+        cost: {
+            elerium_core: [1, 1, 1, 1],
+            supplies: [75, 75, 75, 100],
+            alloy: [5, 5, 5, 10],
+            elerium: [5, 5, 5, 10],
+        },
     },
     advanced_explosives: {
-        requires: ['plasma_grenade']
+        requires: ['plasma_grenade'],
+        cost: {
+            elerium_core: [1, 1, 1, 1],
+            supplies: [50, 50, 50, 75],
+            alloy: [5, 5, 5, 10],
+            elerium: [5, 5, 5, 10],
+        },
     },
     skulljack: {
-        requires: ['proving_grounds']
+        requires: ['proving_grounds'],
+        cost: {
+            supplies: [50, 50, 50, 75],
+        },
     },
     skullmining: {
-        requires: ['skulljack']
+        requires: ['skulljack'],
+        cost: {
+            elerium_core: [1, 1, 1, 1],
+            supplies: [75, 75, 75, 125],
+        }
     },
     exo_suit: {
-        requires: ['plated_armor']
+        requires: ['plated_armor'],
+        cost: {
+            elerium_core: [1, 1, 1, 1],
+            alloy: [5, 5, 5, 10],
+            elerium: [5, 5, 5, 10],
+            advent_trooper_corpse: [2, 2, 2, 4],
+        },
     },
     spider_suit: {
-        requires: ['plated_armor']
+        requires: ['plated_armor'],
+        cost: {
+            elerium_core: [1, 1, 1, 1],
+            alloy: [5, 5, 5, 10],
+            elerium: [5, 5, 5, 10],
+            advent_stun_lancer_corpse: [2, 2, 2, 3],
+        },
     },
     war_suit: {
-        requires: ['powered_armor']
+        requires: ['powered_armor'],
+        cost: {
+            elerium_core: [1, 1, 1, 1],
+            supplies: [50, 50, 50, 125],
+            alloy: [10, 10, 10, 20],
+            elerium: [5, 5, 5, 10],
+        },
     },
     wraith_suit: {
-        requires: ['powered_armor']
+        requires: ['powered_armor'],
+        cost: {
+            elerium_core: [1, 1, 1, 1],
+            supplies: [50, 50, 50, 125],
+            alloy: [10, 10, 10, 15],
+            elerium: [5, 5, 5, 15],
+        },
     },
 }
 
@@ -681,7 +840,6 @@ drops = {
 // stuff that needs to happen
 events = {
     mission_gatecrasher: {
-
     },
     mission_guerrilla_ops: {
         requires: ['mission_gatecrasher'],
