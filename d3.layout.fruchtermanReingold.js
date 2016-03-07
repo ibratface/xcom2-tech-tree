@@ -1,4 +1,3 @@
-// A rudimentary force layout using Gauss-Seidel.
 d3.layout.fruchtermanReingold = function() {
     var force = {},
         event = d3.dispatch("start", "tick", "end"),
@@ -176,7 +175,7 @@ d3.layout.fruchtermanReingold = function() {
             type: "start",
             iterCount: iterCount,
         });
-        timer = d3_timer(force.tick);
+        timer = d3.timer(force.tick);
 
         return force;
     };

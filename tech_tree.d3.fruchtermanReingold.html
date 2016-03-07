@@ -32,7 +32,7 @@
         display: none;
         color: #fff;
         position: fixed;
-        width: 25%;
+        /*width: 25%;*/
         /*height: 50%;*/
         bottom: 0px;
         right: 0;
@@ -62,13 +62,14 @@
         margin: 15px 40px 5px 40px;
     }
     #info > table {
-        margin: 20px 30px 15px 30px;
+        margin: 20px 30px 25px 30px;
     }
     #info th.resource {
         text-align: center;
         text-transform: uppercase;
     }
     #info th {
+        color: #fff;
         text-align: right;
         padding: 2px 10px 2px 10px;
     }
@@ -173,6 +174,9 @@
         stroke-opacity: .2;
     }
 
+    svg#path .text {
+        fill: #fff;
+    }
     svg#path .node {
         fill: #000;
         opacity: 1;
@@ -187,7 +191,6 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 <script src="http://d3js.org/d3.v3.min.js"></script>
-<script src="d3.event.timer.js"></script>
 <script src="d3.layout.fruchtermanReingold.js"></script>
 <script type="text/javascript" src="data.js"></script>
 <script>
