@@ -20,8 +20,7 @@
         background-position: center;
     }
 
-    #container
-    {
+    #container {
         overflow: auto;
         height: 100%;
         width: 100%;
@@ -31,57 +30,59 @@
 
     #dialog {
         display: none;
-
         color: #fff;
         position: fixed;
-
         width: 25%;
         /*height: 50%;*/
         bottom: 0px;
         right: 0;
-
         margin: 25px;
         border: 1px;
         border-style: solid;
-        border-color: #666;
-
+        border-color: #111;
+        /*opacity: 0.8;*/
         background-color: #000;
-        opacity: 0.8;
+        box-shadow: 3px 3px 1px 0px #111;
+    }
+
+    svg#path {
+        margin: 25px 25px 0 25px;
     }
 
     #info {
-        margin: 25px;
-        font-size: 16px;
+        margin: 0 25px 15px 25px;
+        font-size: 14px;
+        color: #999;
     }
-
     #info > h3 {
         text-transform: uppercase;
         font-weight: normal;
     }
-
+    #info > p {
+        margin: 15px 40px 5px 40px;
+    }
     #info > table {
-        width: 100%;
+        margin: 20px 30px 15px 30px;
     }
-
     #info th.resource {
-        text-align: left;
-        text-transform: capitalize;
+        text-align: center;
+        text-transform: uppercase;
     }
-
     #info th {
         text-align: right;
+        padding: 2px 10px 2px 10px;
     }
-
     #info td.resource {
         text-align: left;
         text-transform: capitalize;
+        min-width: 175px;
     }
-
     #info td {
         text-align: right;
+        padding: 2px 10px 2px 10px;
     }
 
-    svg {
+    svg#chart {
         width: 2200px;
         height: 2200px;
         margin: 0px;
@@ -119,7 +120,6 @@
     .project {
         stroke: #EF5350;
     }
-
     .project:hover {
         fill: #EF5350;
     }
@@ -127,7 +127,6 @@
     .item {
         stroke: #3F51B5;
     }
-
     .item:hover {
         fill: #3F51B5;
     }
@@ -135,15 +134,17 @@
     .drop {
         stroke: #9C27B0;
     }
-
     .drop:hover {
         fill: #9C27B0;
     }
 
     .node {
-        stroke-width: 2px;
-        opacity: 0.5;
+        stroke-width: 3px;
+        opacity: 0.45;
         cursor: pointer;
+    }
+    .node.selected {
+        r: 13;
     }
 
     .text:hover {
@@ -152,15 +153,18 @@
         opacity: 1;
         /*font-weight: bolder;*/
     }
-
     .text {
         text-transform: capitalize;
         stroke: none;
-        fill: #999;
+        fill: #888;
         font-size: 14px;
         /*opacity: 0.8;*/
         cursor: pointer;
-        text-shadow: 1px 1px #000;
+        /*text-shadow: 1px 1px #000;*/
+    }
+    .text.selected {
+        text-transform: uppercase;
+        font-size: 16px;
     }
 
     .link {
@@ -168,6 +172,16 @@
         stroke-width: 1px;
         stroke-opacity: .2;
     }
+
+    svg#path .node {
+        fill: #000;
+        opacity: 1;
+    }
+    svg#path .link {
+        stroke-width: 2px;
+        stroke-opacity: 0.5;
+    }
+
 </style>
 
 
@@ -315,21 +329,19 @@
 
         var outer_width = $('#container').width();
         var outer_height = $('#container').height();
-        var inner_width = $('svg').width();
-        var inner_height = $('svg').height();
-        $('#container').scrollLeft((inner_width-outer_width)/2)
-        $('#container').scrollTop((inner_height-outer_height)/2)
+        var chart_width = $('svg#chart').width();
+        var chart_height = $('svg#chart').height();
+        $('#container').scrollLeft((chart_width - outer_width) / 2)
+        $('#container').scrollTop((chart_height - outer_height) / 2)
 
-        var svg_width = $('svg').width();
-        var svg_height = $('svg').height();
-        var svg = d3.select("svg")
+        var svg = d3.select("svg#chart")
             .attr('viewBox', function(d) {
-                return '' + -svg_width / 2 + ' ' + -svg_height / 2 + ' ' + svg_width + ' ' + svg_height + '';
+                return '' + -chart_width / 2 + ' ' + -chart_height / 2 + ' ' + chart_width + ' ' + chart_height + '';
             });;
 
         var force = d3.layout.fruchtermanReingold()
             .autoArea(false)
-            .area(svg_width * svg_height / 8)
+            .area(chart_width * chart_height / 8)
             .gravity(0.75)
             .speed(0.1)
             .iterations(1500)
@@ -367,13 +379,13 @@
         force.on("tick", function(e) {
             text.attr("x", function(d) {
                     var bbox = this.getBBox();
-                    var x = d.x - bbox.width/2;
+                    var x = d.x - bbox.width / 2;
                     return x;
                 })
                 .attr("y", function(d) {
                     if (d.y == 0) return 0;
                     var bbox = this.getBBox();
-                    var y = d.y + bbox.height/3;
+                    var y = d.y + bbox.height / 3;
                     y += 15 * (d.y > 0 ? 1 : -1);
                     return y;
                 });
@@ -402,27 +414,107 @@
 
         force.start();
 
+        var drawPath = function(d) {
+            var svg = d3.select('svg#path');
+            var lineage = {};
+            lineage.nodes = [];
+            var trace = function(node) {
+                lineage.nodes.push(node);
+                for (var parent in node.requires) {
+                    if (data[node.requires[parent]].depth == node.depth - 1) {
+                        trace(data[node.requires[parent]]);
+                        break;
+                    }
+                }
+            }
+            trace(d);
+            lineage.links = [];
+            for (var i=0; i<lineage.nodes.length-1; i++)
+            {
+                lineage.links.push({
+                    source: lineage.nodes[i],
+                    target: lineage.nodes[i+1],
+                });
+            }
+
+            var xOffset = 15;
+            var yOffset = 15;
+            var ySpacing = 50;
+            svg.attr('width', '100%');
+            svg.attr('height', ySpacing * d.depth + yOffset * 2);
+
+            svg.selectAll(".link").remove();
+            svg.selectAll(".link").data(lineage.links).enter().append("line")
+                .attr("class", "link")
+                .attr("x1", function(d) {
+                    return xOffset;
+                })
+                .attr("y1", function(d) {
+                    return d.source.depth * ySpacing + yOffset;
+                })
+                .attr("x2", function(d) {
+                    return xOffset;
+                })
+                .attr("y2", function(d) {
+                    return d.target.depth * ySpacing + yOffset;
+                });
+
+            svg.selectAll(".node").remove();
+            svg.selectAll(".node").data(lineage.nodes).enter().append("circle")
+                .attr('r', function(d) {
+                    return 10;
+                })
+                .attr("class", function(d) {
+                    return "node " + d.type + ' ' + (d.selected?'selected':'');
+                })
+                .attr("cx", function(d) {
+                    return xOffset;
+                })
+                .attr("cy", function(d) {
+                    return d.depth * ySpacing + yOffset;
+                })
+                .attr("id", function(d) {
+                    return d.id;
+                });
+
+            svg.selectAll(".text").remove();
+            svg.selectAll(".text").data(lineage.nodes).enter().append("text")
+                .attr("class", function(d) {
+                    return "text " + d.type + ' ' + (d.selected?'selected':'');
+                })
+                .text(function(d) {
+                    return d.name;
+                })
+                .attr("x", function(d) {
+                    return xOffset + 25;
+                })
+                .attr("y", function(d) {
+                    var bbox = this.getBBox();
+                    return d.depth * ySpacing + yOffset + 5;
+                });
+        }
+
         var showInfo = function(d) {
             $('#dialog').hide();
-            $('#dialog').slideDown(duration=200);
-            $('#info > h3').html(d.name);
-            $('#info > p').html(d.description);
+            $('#dialog').slideDown(duration = 200);
+            // $('#info > h3').html(d.name);
+            // $('#info > p').html(d.description);
             $('#info > table').html('');
-            if (d.cost)
-            {
+            if (d.cost) {
                 $('#info > table')
-                    .append('<tr>\
+                    .append(
+                        '<tr>\
                         <th class="resource">Costs</th>\
                         <th>R</th>\
                         <th>V</th>\
                         <th>C</th>\
                         <th>L</th>\
-                        </tr>');
+                        </tr>'
+                    );
             }
-            for (var resource in d.cost)
-            {
+            for (var resource in d.cost) {
                 var row = $('<tr></tr>');
-                row.append('<td class="resource">' + resource + '</td>');
+                row.append('<td class="resource">' + resource.split('_').join(' ') + '</td>');
                 for (var difficulty in d.cost[resource])
                     row.append('<td>' + d.cost[resource][difficulty] + '</td>');
                 row.appendTo('#info > table');
@@ -430,24 +522,38 @@
             $('#info > p').html(d.description);
         }
 
-        text.on('click', showInfo);
-        node.on('click', showInfo);
+        var onNodeClick = function(d) {
+            d.selected = true;
+            drawPath(d);
+            showInfo(d);
+            d.selected = false;
+        }
+
+        text.on('click', onNodeClick);
+        node.on('click', onNodeClick);
     });
 </script>
 
 <body>
     <div id='dialog'>
+        <svg id="path"></svg>
         <div id='info'>
-            <h3>TITLE</h3>
             <p>Description</p>
             <table>
-                <tr><td>Cost<td><td>1<td><td>2<td><td>3<td><td>4<td></tr>
+                <tr>
+                    <td>Cost</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>4</td>
+                </tr>
             </table>
         </div>
     </div>
     <div id="container">
-        <svg>
+        <svg id='chart'>
         </svg>
     </div>
-    <div id='title'><img src='logo.png'></img></div>
+    <div id='title'><img src='logo.png'></img>
+    </div>
 </body>
