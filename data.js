@@ -43,12 +43,12 @@ facilities = {
     power_conduit: {
         requires: ['power_relay'],
         cost: {
-            supplies: [80, 80, 80, 80],
+            supplies: [80, 80, 80, 100],
             upkeep: [10, 10, 10, 10],
             power: [+2, +2, +2, +2],
         }
     },
-    guerilla_tactics_school: {
+    guerrilla_tactics_school: {
         requires: ['mission_gatecrasher'],
         cost: {
             supplies: [85, 85, 85, 100],
@@ -99,7 +99,7 @@ facilities = {
     quad_turrets: {
         requires: ['defense_matrix'],
         cost: {
-            supplies: [75, 75, 75, 75],
+            supplies: [75, 75, 75, 125],
             upkeep: [10, 10, 10, 10],
             power: [2, 2, 2, 2],
         }
@@ -116,8 +116,8 @@ facilities = {
     second_cell: {
         requires: ['psi_lab'],
         cost: {
-            supplies: [225, 225, 225, 225],
-            elerium: [10, 10, 10, 10],
+            supplies: [225, 225, 225, 300],
+            elerium: [15, 15, 15, 25],
             upkeep: [50, 50, 50, 50],
             power: [5, 5, 5, 5],
         }
@@ -157,7 +157,7 @@ research = {
     advent_officer_autopsy: {
         requires: ['alien_biotech'],
         cost: {
-            advent_officer_corpse: [1, 1, 1, 1]
+            advent_officer_corpse: ['1/10', '1/10', '1/10', '1/20'],
         },
     },
     advent_trooper_autopsy: {
@@ -466,8 +466,8 @@ items = {
     alien_psi_amp: {
         requires: ['gatekeeper_autopsy'],
         cost: {
-            supplies: [200, 200, 200, 200],
-            alloy: [10, 10, 10, 10],
+            supplies: [200, 200, 200, 120],
+            alloy: [10, 10, 10, 0],
             elerium: [15, 15, 15, 45],
             gatekeeper_corpse: [1, 1, 1, 2],
             engineers: [3, 3, 3, 3],
@@ -645,7 +645,7 @@ items = {
 }
 
 // engineering build items
-built_item = {
+build_item = {
     build_flashbang_grenade: {
         requires: ['mission_gatecrasher'],
         cost: {
@@ -790,6 +790,14 @@ projects = {
             supplies: [50, 50, 50, 125],
             alloy: [10, 10, 10, 15],
             elerium: [5, 5, 5, 15],
+        },
+    },
+    advanced_grenade_launcher: {
+        requires: ['muton_autopsy'],
+        cost: {
+            elerium_core: [1, 1, 1, 1],
+            supplies: [75, 75, 75, 80],
+            alloy: [10, 10, 10, 20],
         },
     },
 }
