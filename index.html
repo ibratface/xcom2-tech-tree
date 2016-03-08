@@ -1,1 +1,32 @@
-Test
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="chart.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="d3.layout.fruchtermanReingold.js"></script>
+<script src="data.js"></script>
+<script src="chart.js"></script>
+
+<body>
+    <div id='dialog'>
+        <svg id="path"></svg>
+        <div id='info'>
+            <p>Description</p>
+            <table>
+                <tr>
+                    <td>Cost</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>4</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div id="container">
+        <svg id='chart'>
+        </svg>
+    </div>
+    <div id='title'><img src='logo.png'></img>
+    </div>
+</body>
